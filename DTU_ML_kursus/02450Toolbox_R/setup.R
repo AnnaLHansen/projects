@@ -1,3 +1,4 @@
+setwd("C:/Users/alhan/projects/DTU_ML_kursus/02450Toolbox_R")
 source("Tools/source_tools.R")
 path = "Tools/"
 sourceDir(path, exceptions=c("source_tools.R"))
