@@ -1,0 +1,43 @@
+---
+title: "Property valutation"
+output: html_document
+---
+
+## Part I
+
+```{r}
+train <- read.csv("C:/Users/alhan/projects/DTU_ML_kursus/house-prices-advanced-regression-techniques/train.csv")
+```
+
+**Description of data** \
+Alle boligejere i Danmark betaler skat, ejendomsværdiskat, som er baseret på værdien af deres ejendom. Dette vil sige hele ejendommen inkl. grunden som boligen ligger på. For at kunne gøre dette laver den danske stat offentlige ejendomsvurderinger som disse skatter bliver regnet ud fra. 
+Det er derfor vigtigt at disse vurderinger er retvisende og ikke mindst forklarbare, således at en borger kan forstå hvilke parametre der ligger til grund for ejendomsvurderingen. 
+Til dette project har jeg valgt at arbejde med anonymiseret data fra mit arbejde, hvor jeg til dagligt arbejder med netop denne dette problem. Datasættet består af boligsalg fra en 6 årig periode. Ud over selve huspriserne består data også af en lang række attributter som beskriver karakteristika ved selve boligen. Det kan f.eks. være tagmateriale, boligens opførelsesår, information om størrelsen af huset og grunden eller bbr koder som dækker over boligens anvendelse. 
+Der ud over består data også af en lang række attributter som fortæller noget om hvor boligens beliggenhed. Det kan f.eks. være boligens koordinater eller information om afstanden til kyst og skov eller afstand til motorvej og jernbane. 
+Data kommer fra en række forskellige registre og offentlige styrrelser som eks. BBR og Styrrelsen for Dataforsyning og Effektivisering.
+
+Til dette project vil jeg ved overordnet set prøve at se hvor godt man kan forudsige huspriser ud fra salgspriserne. Jeg vil med Principal Component Analysis få et overblik over de data der er til rådighed og få et visuelt overblik over attributterne. 
+Herefter vil jeg med en unsupervised learning forsøge at gruppere det data jeg har til at generer yderlige attributer som kan indgå i modellen. Jeg vil her specifikt prøve at se om det er muligt at gruppere salgene i forskellige boligtyper. Jeg vil i samme omgang også forsøge at frasorterer outliers i data med anomaly detection. 
+Herefter vil jeg med regressions model forsøge at kaste lys over projektets overordnede problem ved at forsøge at forudsige huspriserne ud fra salgspriser. I tilfælde af at modellen ikke ikke kan komme med en god prædiktion af en given ejendom vil det være muligt at denne ejendom bliver manuelt værdiansat af en sagsbehandler. Jeg vil derfor til slut med en classifikation forsøge at estimerer om en ejendom skal ud til manuel sagsbehandling baseret på dens estimerede ejendomsværdi.
+
+```{r}
+
+```
+
+
+**Part 2 - A detailed explanation of the attributes of the data**
+- Describe the attributes (descrete/continous), (nomial, ordinal, interval, ration)
+- Describe the data issues (missing values or corrupted data)
+- Describe the basic summary statistics.
+**Part 3 - Data visualizations based on suitable viasualization techniques including a principal component analysis (PCA)**
+- Are there issues with outliers in the data?
+- Do the attributes appear to be normal distributes?
+- Are variables correlated?
+- Does the primary machine learning modelling aim appear feasible based on your visualizations?
+- Describe the amount of variation as a function of the number of PCA components
+- Describe the principal directions of the considered PCA components (plot or interpret them in terms of features?)
+- describe the data projected onto the considered principal components.
+(remember to standardiza the data if nessecary)
+**part 4 - A descussion explaining what you have learned about the data** 
+
+
