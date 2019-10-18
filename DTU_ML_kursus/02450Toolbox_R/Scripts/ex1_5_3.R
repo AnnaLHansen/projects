@@ -12,6 +12,9 @@ data <- readMat('./Data/iris.mat')
 # You can see thhe variables loaded in data by checking:
 #names(data). 
 
+# Når data indlaeses fra en matlab fil ligger det som en liste 
+# Med lister i. 
+
 # We can then extract the information simply by:
 X = data$X
 y = data$y

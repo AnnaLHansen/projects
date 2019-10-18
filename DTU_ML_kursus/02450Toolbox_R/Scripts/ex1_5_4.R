@@ -53,6 +53,10 @@ legend("topright", legend=classNames[sorted$ix], fill = cols)
 # the plot to delineate any two groups? Can you draw a line between
 # the Setosas and the Versicolors? The Versicolors and the Virginicas?
 
+# Der vil kunne tegnes en linje mellem 'Isris-setosa' og De to oevrige 'Iris' grupper.
+#Iris-versicolor og Iris-virginica er to grupper som overlapper mens
+# sepal bredten for Iris Setosa er bedre i forhold til deres laengde.
+
 ## Regression problem
 # Since the variable we wish to predict is petal length,
 # petal length cannot any longer be in the data matrix X.

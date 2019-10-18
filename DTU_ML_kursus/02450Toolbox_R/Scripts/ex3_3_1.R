@@ -16,7 +16,7 @@ Q <- matrix(X[i,], ncol = M) # The query image
 Y <- X[-i,] # All images except the i'th
 
 # The next function is in the setup.R, load it if you have not already
-# source("setup.R") 
+source("setup.R") 
 sim <- similarity(Q,Y, SimilarityMeasure)
 
 # Sort similarities

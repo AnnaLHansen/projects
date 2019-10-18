@@ -27,14 +27,14 @@ N = dim(X)[1]
 M = dim(X)[2]
 
 # assign the class labels as row names and the attributes as column names
-colnames(X) <- attributeNames
+colnames(X) <- attributeNames # Hvorfor? De er der allerede
 
 # extract the class names present in data
 classNames <- unique(classLabels)
 
 # Extract numeric class assignments
-y <- as.numeric(as.factor(classLabels))
-y <- y-1
+y <- as.numeric(as.factor(classLabels))# Konverterer faktor variablen til en numerisk værdi i stedet for en string
+y <- y-1 # konverterer den til at starte fra 0
 
 C = length(classNames)
 

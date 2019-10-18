@@ -2,10 +2,11 @@
 rm(list=ls())
 graphics.off()
 source("setup.R")
-
 # Load data
 library(R.matlab)
 dat <- readMat(file.path('Data', 'synth5.mat'))
+plot(dat$X) # plot af synth5
+
 X <- dat$X
 N <- dat$N
 attributeNames <- as.vector(unlist(dat$attributeNames))
@@ -33,11 +34,12 @@ weights = rep(1, times=N)/N;
 
 for(l in 1:L){
     # Choose data objects by random sampling with replacement 
-    i = discreternd(weights, N);
+    i = discreternd(p = weights, n = N); # Bruger vaegtene til at udvaelge sample
+    # og antallet af observationer N. Returnerer en vector med random integers mellem 1 og n.
 
     # Extract training set
-    X_train = X[i, ];
-    y_train = y[i];
+    X_train = X[i, ]; # traekker alle raekker (defineret af i) ud fra X. 
+    y_train = y[i]; # Det samme gøres y
     X_traindf <- data.frame(X_train)
     colnames(X_traindf) <- attributeNames
 

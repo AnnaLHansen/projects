@@ -17,7 +17,7 @@ T <- 14
 
 # Regularized Linear regression 
 # include an additional attribute corresponding to the offset
-X <- cbind( rep(1,N), X)
+X <- cbind( rep(1,N), X) # tilfoejer 1-taller til matrixen
 M <- M[1,1]+1
 attributeNames <- c("Offset",attributeNames)
 
@@ -75,6 +75,9 @@ for(k in 1:K){
   
   for(kk in 1:KK){
   
+    # traekker herefter også traenings og test saettet ud 
+    # til den 'indre' krydsvalidering som bruges til at bestemme 
+    # den optimale lambda
     X_train2 <- X_train[CV2$subsets[CV2$which!=kk], ]
     y_train2 <- y_train[CV2$subsets[CV2$which!=kk]]
     X_test2 <- X_train[CV2$subsets[CV2$which==kk], ]
@@ -83,6 +86,7 @@ for(k in 1:K){
     mu2 <- colMeans(X_train2[, 2:24])
     sigma2 <- apply(X_train2[, 2:24], 2, sd)
     
+    # hvad laves her? scales er en funktion centrerer kolonnnerne i en matrice
     X_train2[, 2:24] <- scale(X_train2[, 2:24], mu2, sigma2)
     X_test2[, 2:24] <- scale(X_test2[, 2:24], mu2, sigma2)
     

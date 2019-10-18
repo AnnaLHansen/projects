@@ -7,6 +7,8 @@ library('readxl')
 
 data <- read_excel("./Data/iris.xls")
 
+# Herefter sker der helt det samme som i exercise ex_1_5_1.R
+# Data inspiseres:
 # extract class labels of observations
 attributeNames <- colnames(data[1:4])
 

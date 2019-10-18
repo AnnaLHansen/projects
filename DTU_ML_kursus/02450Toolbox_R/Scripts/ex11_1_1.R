@@ -21,15 +21,19 @@ Xdf <- data.frame(X)
 colnames(Xdf) <- attributeNames
 
 ## Gaussian mixture model
-
+# plotter råt de to attributter mod hinanden. 
+# Selv inden cluster analysen kan man fint se grupperingen af 4 clusters.
+plot(Xdf)
 # Number of clusters
 K = 4; #minimum value is 2
 
 # Fit model
+# Der bliver lavet en kluster analyse med k = 4.
 model <- Mclust(data=Xdf, G=K) # using the mclust package
 # model <- mvnormalmixEM(x=Xdf, k=K, maxit=100, epsilon=1e-2, verb=TRUE) # using the mixtools package. Defaults for maxit and epsilon are 500 and 1e-8, respectively. Avoid extreme running times by allowing fewer iterations and deeming convergence earlier by setting maxit and epsilon as done here. The argument verb=TRUE makes the method write output from the EM algorithm at each iteration. The argument verb is FALSE by default.
 
 # Get clustering
+# I repraesenterer de fire grupper som data er blevet inddelt i med clusteranalysen.
 i = model$classification # using the mclust package
 #i = max_idx(model$posterior) # using the mixtools package
 
@@ -39,4 +43,4 @@ Xc = t(model$parameters$mean) # using the mclust package
 
 ## Plot results
 # Plot clustering
-clusterplot(Xdf, y, i, Xc, main='GMM: Clustering');
+clusterplot(Xdf, y, i, Xc, main='GMM: Clustering')

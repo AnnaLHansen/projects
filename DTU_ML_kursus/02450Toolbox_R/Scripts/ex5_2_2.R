@@ -14,3 +14,9 @@ lines(X, y_est, col='red');
 y_true = w0+w1*X;
 lines(X, y_true, col='green');
 legend("topleft", legend=c("Data", "Fitted model", "True model"), fill=c("black", "red", "green"))
+
+#  Forskel paa de estimerede modelparamtre og de paramtre som blev
+# burgt til at generere data:
+w_est$coefficients # estimerede
+w0
+w1

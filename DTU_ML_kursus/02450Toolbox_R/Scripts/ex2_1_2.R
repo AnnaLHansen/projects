@@ -5,8 +5,8 @@
 source('Scripts/ex2_1_1.R')
 
 # choose which sensors to plot
-i = 1
-j = 2
+i = 5
+j = 6
 
 ## Make simple plot
 plot(X[ , i], X[ , j])

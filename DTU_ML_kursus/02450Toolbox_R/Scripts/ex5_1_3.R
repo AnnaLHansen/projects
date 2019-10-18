@@ -8,7 +8,18 @@ Xdatframe[,attributeNames] <- lapply(Xdatframe[,attributeNames] , factor)
 summary(Xdatframe)
 
 # fit classification tree
-mytree <- rpart(classNames[y+1] ~Body.temperature + Skin.cover + Gives.birth + Aquatic.creature + Aerial.creature + Has.legs + Hibernates , data=Xdatframe, control=rpart.control(minsplit=1, minbucket=0, cp=0), parms=list(split='information'), method="class")
+mytree <-
+  rpart(
+    classNames[y + 1] ~ Body.temperature + Skin.cover + Gives.birth + Aquatic.creature + Aerial.creature + Has.legs + Hibernates ,
+    data = Xdatframe,
+    control = rpart.control(
+      minsplit = 1,
+      minbucket = 0,
+      cp = 0
+    ),
+    parms = list(split = 'information'),
+    method = "class"
+  )
 
 par(xpd=NA) # make room for text labels
 plot(mytree)
