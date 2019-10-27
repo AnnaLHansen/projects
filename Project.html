@@ -69,9 +69,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -102,8 +100,6 @@ summary {
 </style>
 
 
-
-<div class="container-fluid main-container">
 
 <!-- tabsets -->
 
@@ -178,6 +174,15 @@ $(document).ready(function () {
 
 
 
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
 
 <div class="fluid-row" id="header">
 
@@ -190,7 +195,49 @@ $(document).ready(function () {
 
 <div id="part-i" class="section level2">
 <h2>Part I</h2>
-<p><strong>Part 1 - A description of your data set</strong> - Explain that the problem of interest is (what is your data about) - Explain where you obtained the data - What has previously been done to the data (if available go through som of the original source papers and read what they did to the data and summariza what were their results) - Explain what the primary machine learning modelling aim is for the data + what you hope to accomplish using these techniques. (incl. which attributes are relevant when carrying out the different methods - classification, regression, clustering, association mining and anomaly detection) <strong>Part 2 - A detailed explanation of the attributes of the data</strong> - Describe the attributes (descrete/continous), (nomial, ordinal, interval, ration) - Describe the data issues (missing values or corrupted data) - Describe the basic summary statistics. <strong>Part 3 - Data visualizations based on suitable viasualization techniques including a principal component analysis (PCA)</strong> - Are there issues with outliers in the data? - Do the attributes appear to be normal distributes? - Are variables correlated? - Does the primary machine learning modelling aim appear feasible based on your visualizations?</p>
+<p><strong>Description of data</strong><br />
+Alle boligejere i Danmark betaler skat, ejendomsværdiskat, som er baseret på værdien af deres ejendom. Dette vil sige hele ejendommen inkl. grunden som boligen ligger på. For at kunne gøre dette laver den danske stat offentlige ejendomsvurderinger som disse skatter bliver regnet ud fra. Det er derfor vigtigt at disse vurderinger er retvisende og ikke mindst forklarbare, således at en borger kan forstå hvilke parametre der ligger til grund for ejendomsvurderingen. Til dette project har jeg valgt at arbejde med anonymiseret data fra mit arbejde, hvor jeg til dagligt arbejder med netop denne dette problem. Datasættet består af boligsalg fra en 6 årig periode. Ud over selve huspriserne består data også af en lang række attributter som beskriver karakteristika ved selve boligen. Det kan f.eks. være tagmateriale, boligens opførelsesår, information om størrelsen af huset og grunden eller bbr koder som dækker over boligens anvendelse. Der ud over består data også af en lang række attributter som fortæller noget om hvor boligens beliggenhed. Det kan f.eks. være boligens koordinater eller information om afstanden til kyst og skov eller afstand til motorvej og jernbane. Data kommer fra en række forskellige registre og offentlige styrrelser som eks. BBR og Styrrelsen for Dataforsyning og Effektivisering.</p>
+<p>Til dette project vil jeg ved overordnet set prøve at se hvor godt man kan forudsige huspriser ud fra salgspriserne. Jeg vil med Principal Component Analysis få et overblik over de data der er til rådighed og få et visuelt overblik over attributterne. Herefter vil jeg med en unsupervised learning forsøge at gruppere det data jeg har til at generer yderlige attributer som kan indgå i modellen. Jeg vil her specifikt prøve at se om det er muligt at gruppere salgene i forskellige boligtyper. Jeg vil i samme omgang også forsøge at frasorterer outliers i data med anomaly detection. Herefter vil jeg med regressions model forsøge at kaste lys over projektets overordnede problem ved at forsøge at forudsige huspriserne ud fra salgspriser. I tilfælde af at modellen ikke ikke kan komme med en god prædiktion af en given ejendom vil det være muligt at denne ejendom bliver manuelt værdiansat af en sagsbehandler. Jeg vil derfor til slut med en classifikation forsøge at estimerer om en ejendom skal ud til manuel sagsbehandling baseret på dens estimerede ejendomsværdi.</p>
+</div>
+<div id="part-ii" class="section level2">
+<h2>Part II</h2>
+<p><strong>Description of the attributes</strong><br />
+</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">interval</th>
+<th align="right">normial</th>
+<th align="right">ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>continous</td>
+<td align="right">3</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>descrete</td>
+<td align="right">6</td>
+<td align="right">22</td>
+<td align="right">75</td>
+</tr>
+</tbody>
+</table>
+<p>Data består af 106 attributter med hver 305701 observationer. Tabellen ovenfor viser de forskellige atttributter i data og er et datasæt som består af <em>records</em> - dvs. det er en samling af observationer og deres attributter.</p>
+<p><strong>Issues with data</strong><br />
+Der er i data flere uhensigtsmæssigheder som der skal tages højde for. Datasættet består af solgte boligenheder. Det er dog en stor blanding af boligenheder på tværs af alle typer af ejendomme. Det kan være alt fra erhversejendomme til almindelige parcelhus til ejerlejligheder og landbrugsejendomme. Da disse typer af ejendomme vil være meget forskellige - Alle disse forskellige typer af ejendomme vil ikke kunne blive værdiansat ud fra samme model. Salgsprisen for en ejendom vil være påvirket af hvilken ejendomstype der handles med da der kan være forskel på hvad man kan bruge ejendommen til. Eks. vil et sommerhus ikke blive værdiansat på samme måde som et parcelhus da der er forskel i hvor store del af året man må bo i et sommerhus i forhold til et parcelhus.</p>
+<p>Det første delmål vil derfor være at identificerer alle almindelige parcelhuse og træne en model til at værdiansætte parcelhuse.</p>
+<p>En anden uhensigtsmæssighed i forhold til data er at alle afstandsmålene (<em>eks. afstand til kyst “aux.ice_info.adresse.afstand_kyst”</em>) er kun tilgængelig hvis den pågældende boligenhed har en afstand til kyst som er mindre end 1500 meter. Hvis Ikke er det vurderert at afstand til kyst ikke har nogen merværdi i forhold til prisen på enheden. I forhold til data giver dette nogle problemer da vi for alle de steder hvor afstanden er større end eks. 1500 har missing values (<em>NA</em>).</p>
+<p><strong>Basic summary statistics</strong><br />
+</p>
+</div>
+<div id="part-iii" class="section level2">
+<h2>Part III</h2>
+<p><strong>Part 3 - Data visualizations based on suitable viasualization techniques including a principal component analysis (PCA)</strong> - Are there issues with outliers in the data? - Do the attributes appear to be normal distributes? - Are variables correlated? - Does the primary machine learning modelling aim appear feasible based on your visualizations? - Describe the amount of variation as a function of the number of PCA components - Describe the principal directions of the considered PCA components (plot or interpret them in terms of features?) - describe the data projected onto the considered principal components. (remember to standardiza the data if nessecary) <strong>part 4 - A descussion explaining what you have learned about the data</strong></p>
 </div>
 
 
