@@ -1,7 +1,6 @@
 klargoer_salg <- function(df) {
   df <- df[, !grepl("NN", colnames(df))]
-  df <- df[df$ejendomsgruppe %in% c("pcl_byzone", "pcl_landzone",
-                                                         "pcl_somzone", "pcl_uzone"),]
+  df <- df[df$ejendomsgruppe %in% c("pcl_byzone", "pcl_landzone"),]
   df <- df[, !grepl("ejendomsgruppe", colnames(df))]
   
   df$aux.ice_info.adresse.afstand_kyst <- ifelse(is.na(df$aux.ice_info.adresse.afstand_kyst), 
@@ -218,4 +217,42 @@ missing_values_pct95 <- function(attribut, df){
   df <- df[, !colnames(df) %in% attributter_som_fjernes]
   return(df)
 }
+
+
+trimmer_og_uniformiserer_data <- function(df){
+  df <- subset(df, enhed.antalvaerelser > 1 & enhed.antalvaerelser < 10)
+  df <- subset(df, bolig_areal < 500 & bolig_areal > 50)
+  df <- subset(df, bolig_alder > 0 & bolig_alder < 100)
+  df <- subset(df, bygning.antaletager > 0 & bygning.antaletager < 4)
+  df <- subset(df, enhed.antalbadevaerelser > 0 & enhed.antalbadevaerelser < 4)
+  df <- subset(df, enhed.antalvandskylledetoiletter > 0 & enhed.antalvandskylledetoiletter < 4)
+  df <- subset(df, aux.vurbenyttelseskode == "01")
+  df <- df[, c("aux.ice_info.adresse.afstand_hoejspaending_any",
+                "aux.ice_info.adresse.afstand_vandloeb_any",
+                "aux.ice_info.adresse.afstand_soe_any",
+                "aux.ice_info.adresse.afstand_station_any",
+                "fremskreven_pris_M2",
+                # "fremskreven_pris", 
+                # "bygning.ydervaeggensmateriale",
+                "bygning.tagdaekningsmateriale",
+                # "bygning.varmeinstallation",
+                # "bygning.opvarmningsmiddel",
+                # "ombyg_alder",
+                # "enhed.antalvaerelser",
+                # "enhed.antalbadevaerelser",
+                # "enhed.antalvandskylledetoiletter",
+                "bolig_areal",
+                # "bolig_alder",
+                "aux.ice_info.jordstykker.registreretareal_fratrukket_vejareal",
+                "aux.ice_info.adresse.afstand_jernbane_any",
+                "aux.ice_info.adresse.afstand_motorvej_motortrafikvej",
+                "aux.ice_info.adresse.afstand_trafikvej_gennemfart",
+                "aux.ice_info.adresse.afstand_kyst"
+                # "aux.adresse.etrs89koordinatoest",
+                # "aux.adresse.etrs89koordinatnord"
+                )]
+  
+  df
+  
+  }
 

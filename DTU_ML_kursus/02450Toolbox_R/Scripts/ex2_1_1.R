@@ -2,7 +2,7 @@
 # exercise 2.1.1
 ####################
 # read data into R
-dat <- read.csv("./Data/nanonose.csv", sep=",", check.names=FALSE)
+dat <- read.csv("DTU_ML_kursus/02450Toolbox_R/Data/nanonose.csv", sep=",", check.names=FALSE)
 # extract class labels of observations
 classLabels <- colnames(dat)
 classLabels <- classLabels[-(1:2)]
