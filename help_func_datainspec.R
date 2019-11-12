@@ -1,5 +1,5 @@
 klargoer_salg <- function(df) {
-  df <- df[, !grepl("NN", colnames(df))]
+  df <- df[, !grepl("^NN", colnames(df))]
   df <- df[df$ejendomsgruppe %in% c("pcl_byzone", "pcl_landzone"),]
   df <- df[, !grepl("ejendomsgruppe", colnames(df))]
   
@@ -227,27 +227,28 @@ trimmer_og_uniformiserer_data <- function(df){
   df <- subset(df, enhed.antalbadevaerelser > 0 & enhed.antalbadevaerelser < 4)
   df <- subset(df, enhed.antalvandskylledetoiletter > 0 & enhed.antalvandskylledetoiletter < 4)
   df <- subset(df, aux.vurbenyttelseskode == "01")
-  df <- df[, c("aux.ice_info.adresse.afstand_hoejspaending_any",
-                "aux.ice_info.adresse.afstand_vandloeb_any",
-                "aux.ice_info.adresse.afstand_soe_any",
-                "aux.ice_info.adresse.afstand_station_any",
+  df <- df[, c(#"aux.ice_info.adresse.afstand_hoejspaending_any",
+                # "aux.ice_info.adresse.afstand_vandloeb_any",
+                # "aux.ice_info.adresse.afstand_soe_any",
+                # "aux.ice_info.adresse.afstand_station_any",
                 "fremskreven_pris_M2",
                 # "fremskreven_pris", 
-                # "bygning.ydervaeggensmateriale",
+                "bygning.ydervaeggensmateriale",
                 "bygning.tagdaekningsmateriale",
-                # "bygning.varmeinstallation",
-                # "bygning.opvarmningsmiddel",
-                # "ombyg_alder",
-                # "enhed.antalvaerelser",
-                # "enhed.antalbadevaerelser",
-                # "enhed.antalvandskylledetoiletter",
+                #"bygning.varmeinstallation",
+                "bygning.opvarmningsmiddel",
+                "ombyg_alder",
+                "enhed.antalvaerelser",
+                "enhed.antalbadevaerelser",
+                "enhed.antalvandskylledetoiletter",
                 "bolig_areal",
-                # "bolig_alder",
+                "bolig_alder",
                 "aux.ice_info.jordstykker.registreretareal_fratrukket_vejareal",
-                "aux.ice_info.adresse.afstand_jernbane_any",
+                #"aux.ice_info.adresse.afstand_jernbane_any",
                 "aux.ice_info.adresse.afstand_motorvej_motortrafikvej",
-                "aux.ice_info.adresse.afstand_trafikvej_gennemfart",
-                "aux.ice_info.adresse.afstand_kyst"
+                #"aux.ice_info.adresse.afstand_trafikvej_gennemfart",
+                "aux.ice_info.adresse.afstand_kyst",
+                "EV_NN_M2"
                 # "aux.adresse.etrs89koordinatoest",
                 # "aux.adresse.etrs89koordinatnord"
                 )]
