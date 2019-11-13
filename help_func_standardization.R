@@ -45,10 +45,10 @@ standardize <- function(X)
   #
   # Author: Laura Frølich, lff@imm.dtu.dk
   Xmean <- colMeans(X, na.rm = TRUE)
-  Xnomean <- X-matrix(rep(Xmean, times=N), byrow=TRUE, nrow=N)
+  Xnomean <- X-matrix(rep(Xmean, times=nrow(X)), byrow=TRUE, nrow=nrow(X))
   
   Xsd <- apply(Xnomean,2,sd)
-  Xstandardized <- Xnomean/matrix(rep(Xsd, times=N), byrow=TRUE, nrow=N)
+  Xstandardized <- Xnomean/matrix(rep(Xsd, times=nrow(X)), byrow=TRUE, nrow=nrow(X))
   Xstandardized
 }
 

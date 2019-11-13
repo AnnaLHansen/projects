@@ -2,7 +2,7 @@ setwd("~/projects")
 source("help_func_datainspec.R")
 source("help_func_standardization.R")
 
-train <- readRDS("~/anonym_data_kursus.rds")
+train <- readRDS("~/1_A_Machine_learning_kursus_data/anonym_data_kursus.rds")
 train <- klargoer_salg(train) # tilbage imputerer og fjerner irrelevante attributter
 # Laver et subset af salgene så det kun er de almindelige parcelhuse som optræder i data
 # Herefter bliver der lavet en oversigt over de variable som findes i data 
@@ -95,7 +95,7 @@ sum(rho[1:18])
 # som to selvstændige variable?
 Z <- s$u%*%diag(s$d)
 i <- 1
-j <- 7
+j <- 2
 plot(Z[, i ], Z[, j])
 
 # Laver endnu et plot af PCA analysen:
@@ -104,7 +104,7 @@ V <- s$v
 library(ggplot2)
 # We saw in 2.1.3 that the first 3 components explaiend more than 90
 # percent of the variance. Let's look at their coefficients:
-pcs <- 1:3
+pcs <- 1:16
 # Make some legend strings:
 legendStrings = c()
 for (pc in pcs) { legendStrings = c(legendStrings, paste('PC',toString(pc))) }
@@ -152,3 +152,6 @@ corrplot(correlation) # Der er et eller andet galt med dimentionerne
 
 ## Similarity measures mangler: og Et ordenligt correlation plot mangler
 # også !
+
+
+

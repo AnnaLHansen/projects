@@ -108,7 +108,8 @@ undersoeger_attributter <- function(df){
         grepl("enhed.enhedensanvendelse", a$attributes) |
         grepl("etage.bygningensetagebetegnelse", a$attributes) |
         grepl("region_nr", a$attributes) |
-        grepl("aux.vurbenyttelseskode", a$attributes),
+        grepl("aux.vurbenyttelseskode", a$attributes) |
+        grepl("^EV", a$attributes),
       "descrete",
       ifelse(
         grepl("ice_info.min_koteletratiobuff250", a$attributes) |
@@ -147,7 +148,8 @@ undersoeger_attributter <- function(df){
           grepl("bygning.antaletager", a$attributes) |
           grepl("ombyg_alder", a$attributes)|
           grepl("fremskreven_pris", a$attributes) |
-          grepl("fremskreven_pris_M2", a$attributes),
+          grepl("fremskreven_pris_M2", a$attributes) |
+          grepl("^EV", a$attributes),
         "interval",
         ifelse(
           grepl("enhed.*varme*", a$attributes) |
@@ -236,7 +238,7 @@ trimmer_og_uniformiserer_data <- function(df){
                 "bygning.ydervaeggensmateriale",
                 "bygning.tagdaekningsmateriale",
                 #"bygning.varmeinstallation",
-                "bygning.opvarmningsmiddel",
+                #"bygning.opvarmningsmiddel",
                 "ombyg_alder",
                 "enhed.antalvaerelser",
                 "enhed.antalbadevaerelser",
