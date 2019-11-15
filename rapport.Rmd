@@ -29,7 +29,7 @@ Herefter vil jeg med en unsupervised learning forsøge at gruppere det data jeg 
 Herefter vil jeg med regressions model forsøge at kaste lys over projektets overordnede problem ved at forsøge at forudsige huspriserne ud fra salgspriser. I tilfælde af at modellen ikke ikke kan komme med en god prædiktion af en given ejendom vil det være muligt at denne ejendom bliver manuelt værdiansat af en sagsbehandler. Jeg vil derfor til slut med en classifikation forsøge at estimerer om en ejendom skal ud til manuel sagsbehandling baseret på dens estimerede ejendomsværdi.
 
 
-** Detaljeret beskrivelse af data** \
+**Detaljeret beskrivelse af data** \
 
 ```{r, echo=FALSE}
 train <- readRDS("~/1_A_Machine_learning_kursus_data/anonym_data_kursus.rds")
