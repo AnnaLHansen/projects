@@ -1,19 +1,19 @@
 # exercise 8.1.1
 rm(list=ls())
 
-source("setup.R")
+source("DTU_ML_kursus/02450Toolbox_R/setup.R")
 library(cvTools)
 library(R.matlab)
 library(glmnet)
 
 # Load Data
-dat <- readMat(file.path('Data', 'body.mat'))
+dat <- readMat(file.path('DTU_ML_kursus/02450Toolbox_R/Data', 'body.mat'))
 X <- dat$X
 N <- dat$N
 attributeNames <- as.vector(unlist(dat$attributeNames))
 M <- dat$M
 y <- dat$y
-T <- 14
+T <- 14 # antallet af afpøvede lambdaer
 
 # Regularized Linear regression 
 # include an additional attribute corresponding to the offset

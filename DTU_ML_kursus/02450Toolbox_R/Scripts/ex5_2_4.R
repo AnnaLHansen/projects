@@ -1,7 +1,7 @@
 # exercise 5.2.4
 
 # Load wine data 
-source(file.path("Scripts", "ex5_1_5.R"))
+source(file.path("DTU_ML_kursus/02450Toolbox_R/Scripts/ex5_1_5.R"))
 
 # Fit linear regression model to predict Alcohol from all other attributes
 y = X[, 11]

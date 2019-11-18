@@ -32,7 +32,7 @@
 library(dplyr)
 library(knitr)
 library(corrplot)
-setwd("~/projects")
+setwd("C:/Users/alhan/projects")
 source("help_func_datainspec.R")
 source("help_func_standardization.R")
 @
@@ -57,14 +57,14 @@ Herefter vil jeg med regressions model forsøge at kaste lys over projektets ove
 \section{Detaljeret beskrivelse af data}
 
 <<echo=FALSE>>=
-train <- readRDS("~/1_A_Machine_learning_kursus_data/anonym_data_kursus.rds")
+train <- readRDS("anonym_data_kursus.rds")
 @
 
 
 Det salgsdata som jeg har valgt at arbejde med dækker i udgangspunktet `r nrow(train)` observationer med `r ncol(train)` attributter. Inden jeg går i gang med at kigge på data har jeg valgt at lave en oprydning i data. Det har jeg gjort fordi mange af attributterne bliver i mit daglige arbejde brugt i forbindelse med imødekomme diverse forretningskrav. Desuden dækker observationerne mange forskellige typer af ejendomssalg. Det er en blanding af parcelhussalg, rækkehussalg, sommerhussalg, salg af ejerlejligheder mm. og ud fra et forretningsmæssigt perspektiv giver det ikke mening at træne en model på alle salg og ejendomstypen vil påvirke salgsprisen. F.eks. vil der på sommerhuse være restriktioner på hvor meget om året man må bo i sommerhuset og der kan være i sommerhusområder være andre regler for hvad man må bruge sin grund til end der er i et parcelhusområde. Jeg har derfor ligeledes valgt at reducerer antallet af observationer således at de kun dækker almindelige parcelhus. Dette er gjort ved kun at beholde alle de ejendomssalg, hvor ejendommen i BBR er registreret med enheds- og bygningsanvendelsen 120. 
 
 <<echo=FALSE>>=
-train <- readRDS("~/1_A_Machine_learning_kursus_data/train_klargjort_salg.rds")
+train <- readRDS("train_klargjort_salg.rds")
 @
 
 Herefter er der `r nrow(train)` observationer tilbage og `r ncol(train)` attributter.
@@ -72,7 +72,7 @@ Herefter er der `r nrow(train)` observationer tilbage og `r ncol(train)` attribu
 Der er for en del af attributterne en stor andel af manglende værdier. Det er især i forhold til variable fra BBR, som beskriver forskellige karakteristika ved selve boligen. Her har jeg har valgt at fjerne alle de attributter som har mere end 95\% manglende værdier.
 
 <<echo=FALSE>>=
-attribut_oversigt <- readRDS("~/1_A_Machine_learning_kursus_data/attribut_oversigt.rds")
+attribut_oversigt <- readRDS("atrtribut.rds")
 attribut_oversigt <- attribut_oversigt[order(attribut_oversigt$pct_missing_values, decreasing = TRUE),]
 knitr::kable(attribut_oversigt)
 @
@@ -89,18 +89,18 @@ Data er derfor blevet ensrettet på følgende måde:
 % - enhed.antalvandskylledetoiletter > 0 og enhed.antalvandskylledetoiletter < 4
 % - fremskreven_pris_M2 < 30000 og fremskreven_pris_M2 > 0
 
-Slutteligt er der blevet taget et valg om kun at udvælge de rå attributter som menes at være de vigtigste i
-forhold til at forudsige værdien af et standad parcelhus.
+Slutteligt er der blevet taget et valg om kun at udvælge de rå attributter som menes at være de
+vigtigste i forhold til at forudsige værdien af et standad parcelhus.
 
 <<echo=FALSE>>=
-train <- readRDS("~/1_A_Machine_learning_kursus_data/train_behandlet.rds")
+train <- readRDS("train_behandlet.rds")
 attribut <- undersoeger_attributter(train)
 knitr::kable(attribut)
 @
 
  
-De to attributter der dækker over tagtypematriale og ydervægsmateriale er diskrete variable som fordel kan
-normaliseres med en one-out-of-k transformering.
+De to attributter der dækker over tagtypematriale og ydervægsmateriale er diskrete variable som fordel
+kan normaliseres med en one-out-of-k transformering.
 
 Afstand til kyst og afstand til motorvej er to variable som jeg har valgt at binariserer. Det har jeg da de to
 features forud for denne rapport er blevet imputeret. For afstand til kyst er afstanden op til 1500 meter målt.
@@ -200,6 +200,7 @@ plot(Z[, i ], Z[, j])
 
 \chapter{Part II}
 
+\section{Regression - part A}
 I denne første del af del2 vil jeg med en linear regression forsøge at forudsige handelspriser baseret på bl.a. områdeprisen. Da der er en klar sammenhæng mellem hvad en ejendom bliver solgt for og hvad naboerne i området bliver solgt for er det klart en variabel som skal indgå i den lineære regressions model. Desuden er størrelsen og standen på ejendommen også relevant. Jeg har ikke stand som en attribut i mit datasæt men vil i stedet bruge boligens opførelsesår og ombygningsår som et inddirekte mål for dette. Er ejendommen eks. opført i starten af 1900 men har siden ingen ombygninger haft vil det i langt de fleste tilfælde betyde at bygningen er i en dårligere stand end en ejendom opført i 1970 med en ombygning i 2010. Det er kun større ombygninger som registreres i BBR. 
 Håbet med denne regressionsanalyse er at man ud fra relativt få variable og en relativt simpel model vil kunne forudsige ejendomspriserne. Årsagen til at dette er en interessant analyse er at der med de tidligere offentlige ejendomsvurderinger har været store problemer i forhold til at forklare den enkelte borger hvorfor vedkommenes ejendomsværdi er som den er. 
 
@@ -230,7 +231,7 @@ x1 <- train[1:80000, ]
 x2 <- train[80000:185018, ]
 
 dat <- data.frame(x1[, c("EV_NN_M2","bolig_areal")])
-xnam <- paste("X", 1:Km, sep="")
+xnam <- paste("X", 1:2, sep="")
 colnames(dat) <- xnam
 y <- train$fremskreven_pris_M2[1:80000]
 (fmla <- as.formula(paste("y ~ ", paste(xnam, collapse= "+"))))
@@ -246,6 +247,38 @@ lines(newdat[,1], y_est, col='red')
 legend("topleft", legend=c('Data', 'Fitted model'), fill=c("black", "red"))
 @
 
+Ud fra den estimerede model kan man plotte sin afhængige variabel mod de predikterede værdier.
+Forskellen mellem den faktiske afhænge variabel (i dette tilfælde de fremskrevne salgspiser) og den prædikterede variabel (modellens estimerede y) er residualet.
+Selve den lineære regressionsmodel kan anvanceres ved at tranformere inputvariablene. Det kan eksempelvis være at opløfte variablene i anden potens og bruge dem som prediktor sammen med den originale version af variablen.
+Målet for denne simple lineære regressionsmodel er reducere 'cost-funktionen' så meget som muligt. For en simpel lineær regressiosmodel er cost-funktionen en squared error, hvilket vil sige at målet her er at reducere 'mean squared error' så meget som muligt - dog uden at overfitte. 
+Andre cost-funktioner kan bruges til andre problemstillinger. En logistisk funktion kan således bruges til at hvis man arbejder med et logistisk regressionsproblem. 
+
+<<echo=FALSE, fig=TRUE>>=
+# Fit en lineær regressionsmodel til at forudsige salgspriser ud fra
+# variablene 'ev_nn_m2' og 'bolig_areal'.
+y =  train[, c("fremskreven_pris_M2")]
+Xr =  train[, c("EV_NN_M2", "bolig_areal")]
+xnam <- names(Xr)
+(fmla <- as.formula(paste("y ~ ", paste(xnam, collapse= "+"))))
+w_est = lm(fmla, data=Xr)
+
+print(summary(w_est))
+
+# Make a scatter plot of predicted versus true values of Alcohol
+y_est = w_est$fitted.values
+plot(y, y_est, xlab='fremskreven_pris (true)', ylab='fremskreven_pris (estimated)',
+     main='salgspriser', pch=20)
+
+# Make a histogram of the residual error
+hist(y-y_est, breaks=41, main="Residual error")
+
+# Compute mean squared error
+mean((y-y_est)^2)
+@
+
+I denne næste sektion bliver begrebet regularisering introduceret. Regularisering er en metode man kan bruge til at styre kompleksisteten af sin model. 
+Til denne øvelser bliver der lavet en dobbelt krydsvalidering hvor det indre krydsvalideringsloop som bruges til at bestemme den optimale regulariseringsparameter (lambda).
+
 
 2. Introduce a regularization parameter λ as discussed in chapter 14 of the lecture
 notes, and estimate the generalization error for different values of λ. Specifically, choose a reasonable range of values of λ (ideally one where the generalization error first drop and then increases), and for each value use K = 10
@@ -257,6 +290,9 @@ with the lowest generalization error as estimated in the previous question.
 I.e., what are the effects of the selected attributes in terms of determining the
 predicted class. Does the result make sense?
 
+
+\section{Regression - part B}
+\section{Classification}
 
 \chapter{Part III}
 
