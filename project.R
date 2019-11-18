@@ -1,8 +1,10 @@
-setwd("~/projects")
+setwd("C:/Users/alhan/projects")
+#setwd("~/projects")
 source("help_func_datainspec.R")
 source("help_func_standardization.R")
 
-train <- readRDS("~/1_A_Machine_learning_kursus_data/anonym_data_kursus.rds")
+train <- readRDS("anonym_data_kursus.rds")
+#train <- readRDS("~/1_A_Machine_learning_kursus_data/anonym_data_kursus.rds")
 train <- klargoer_salg(train) # tilbage imputerer og fjerner irrelevante attributter
 # Laver et subset af salgene så det kun er de almindelige parcelhuse som optræder i data
 # Herefter bliver der lavet en oversigt over de variable som findes i data 
@@ -153,5 +155,38 @@ corrplot(correlation) # Der er et eller andet galt med dimentionerne
 ## Similarity measures mangler: og Et ordenligt correlation plot mangler
 # også !
 
+##############
+X <- train$EV_NN_M2
+y <- train$fremskreven_pris_M2
+plot(X, y, main="Linear regression", xlab="X", ylab="y")
 
+dev.off() # close the figure from exercise 5.2.1
+# Estimate model parameters
+w_est = lm(y ~ X);
+
+# Plot the predictions of the model
+plot(X, y, main='Linear regression', xlab="X", ylab="y");
+y_est = w_est$coef[1] +w_est$coef[2]*X;
+lines(X, y_est, col='red');
+legend("topleft", legend=c("Data", "Fitted model"), fill=c("black", "red"))
+
+###########
+x1 <- train[1:80000, ] 
+x2 <- train[80000:185018, ]
+
+dat <- data.frame(x1[, c("EV_NN_M2","bolig_areal")])
+xnam <- paste("X", 1:Km, sep="")
+colnames(dat) <- xnam
+y <- train$fremskreven_pris_M2[1:80000]
+(fmla <- as.formula(paste("y ~ ", paste(xnam, collapse= "+"))))
+w_est = lm(fmla, data=dat);
+
+# Plot the predictions of the model
+plot(train$EV_NN_M2, train$fremskreven_pris_M2, main="Linear regression", xlab="X", ylab="y")
+
+newdat <- data.frame(x2[, c("EV_NN_M2","bolig_areal")])
+colnames(newdat) <- xnam
+y_est = predict(w_est, newdata=newdat)
+lines(newdat[,1], y_est, col='red');
+legend("topleft", legend=c('Data', 'Fitted model'), fill=c("black", "red"));
 
