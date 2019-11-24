@@ -409,5 +409,6 @@ print(paste('- R^2 test:', (sum(Error_test_nofeatures)-sum(Error_test_rlr))/sum(
 print('Weights in last fold :')
 for(m in 1:M){
   print(paste(attributeNames[m], w_rlr[m, k]))
+  
 }
 
