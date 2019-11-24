@@ -156,20 +156,17 @@ corrplot(correlation) # Der er et eller andet galt med dimentionerne
 # også !
 
 ##############
-X <- train$EV_NN_M2
-y <- train$fremskreven_pris_M2
-plot(X, y, main="Linear regression", xlab="X", ylab="y")
 
-dev.off() # close the figure from exercise 5.2.1
-# Estimate model parameters
-w_est = lm(y ~ X);
 
+w_est = lm(fremskreven_pris_M2 ~ EV_NN_M2, data = train)
 # Plot the predictions of the model
-plot(X, y, main='Linear regression', xlab="X", ylab="y");
-y_est = w_est$coef[1] +w_est$coef[2]*X;
-lines(X, y_est, col='red');
-legend("topleft", legend=c("Data", "Fitted model"), fill=c("black", "red"))
-
+plot(train$fremskreven_pris_M2, train$EV_NN_M2,
+     main='Simpel lineær regression',
+     xlab="Naboernes kvadratmeterpriser", 
+     ylab="Fremskrevne kvadratmeterpriser");
+y_est = w_est$coef[1] +w_est$coef[2]*train$fremskreven_pris_M2;
+lines(train$fremskreven_pris_M2, y_est, col='red');
+legend("topleft", legend=c("Data", "Fittet model"), fill=c("black", "red"))
 ###########
 # x1 <- train[1:80000, ] 
 # x2 <- train[80000:185018, ]
@@ -209,11 +206,6 @@ hist(y-y_est, breaks=41, main="Residual error")
 ###########################
 ##### Regularization ######
 ###########################
-
-source("DTU_ML_kursus/02450Toolbox_R/setup.R")
-library(cvTools)
-library(R.matlab)
-library(glmnet)
 dat <- readRDS("train_behandlet_og_standardz.rds")
 X <- dat[, colnames(dat) != "fremskreven_pris_M2"]
 N <- nrow(X)
@@ -392,22 +384,169 @@ for(k in 1:K){
   
 }
 
-# Display Results
-print('Linear regression without feature selection:');
-print(paste('- Training error: ', sum(Error_train)/sum(CV$TrainSize)));
-print(paste('- Test error', sum(Error_test)/sum(CV$TestSize)));
-print(paste('- R^2 train:     %8.2f\n', (sum(Error_train_nofeatures)-sum(Error_train))/sum(Error_train_nofeatures)))
-print(paste('- R^2 test:     %8.2f\n', (sum(Error_test_nofeatures)-sum(Error_test))/sum(Error_test_nofeatures)))
 
-print('Regularized Linear regression:')
-print(paste('- Training error:', sum(Error_train_rlr)/sum(CV$TrainSize)))
-print(paste('- Test error:', sum(Error_test_rlr)/sum(CV$TestSize)))
-print(paste('- R^2 train: ', (sum(Error_train_nofeatures)-sum(Error_train_rlr))/sum(Error_train_nofeatures)))
-print(paste('- R^2 test:', (sum(Error_test_nofeatures)-sum(Error_test_rlr))/sum(Error_test_nofeatures)))
+######
 
-print('Weights in last fold :')
-for(m in 1:M){
-  print(paste(attributeNames[m], w_rlr[m, k]))
+library(neuralnet) #install.packages("neuralnet")
+library(cvTools)
+
+# Load data
+dat <- readRDS("train_behandlet_og_standardz.rds")
+X <- dat
+N <- nrow(X)
+attributeNames <- colnames(X)
+M <- ncol(X)
+y <- dat[, colnames(dat) == "fremskreven_pris_M2"]
+
+# K-fold crossvalidation
+K = 5;
+set.seed(1234) # for reproducibility
+CV <- cvFolds(N, K=K)
+# set up vectors that will store sizes of training and test sizes
+CV$TrainSize <- c()
+CV$TestSize <- c()
+
+# Parameters for neural network classifier
+NHiddenUnits = 2;  # Number of hidden units
+NTrain = 1; # Number of re-trains of neural network
+
+# Variable for classification error
+Error = rep(NA, times=K)
+(fmla <- as.formula(paste("y_train ~ ", paste(attributeNames, collapse= "+"))))
+for(k in 1:K){ # For each crossvalidation fold
+  print(paste('Crossvalidation fold ', k, '/', K, sep=''))
+  
+  # Extract training and test set
+  X_train <- X[CV$subsets[CV$which!=k], ];
+  y_train <- y[CV$subsets[CV$which!=k]];
+  X_test <- X[CV$subsets[CV$which==k], ];
+  y_test <- y[CV$subsets[CV$which==k]];
+  CV$TrainSize[k] <- length(y_train)
+  CV$TestSize[k] <- length(y_test)
+  
+  X_traindf <- data.frame(X_train)
+  colnames(X_traindf) <- attributeNames
+  X_testdf <- data.frame(X_test)
+  colnames(X_testdf) <- attributeNames
+  
+  # Fit neural network to training set
+  MSEBest = Inf;
+  for(t in 1:NTrain){
+    netwrk = neuralnet(fmla, X_traindf, hidden=NHiddenUnits, act.fct='tanh', linear.output=TRUE, err.fct='sse');
+    mse <- sum((unlist(netwrk$net.result)-y_train)^2)
+    
+    if(mse<MSEBest){
+      bestnet <- netwrk
+      MSEBest <- mse
+    }
+  }
+  # Predict model on test data
+  
+  computeres <- compute(bestnet, X_testdf)
+  y_test_est = unlist(computeres$net.result)
+  
+  # Compute error rate
+  Error[k] = sum((y_test-y_test_est)^2); # Count the number of errors
   
 }
+
+saveRDS(Error, "ANN/Error.rds")
+saveRDS(CV, "ANN/CV.rds")
+saveRDS(bestnet, "ANN/bestnet.rds")
+# Print the error rate
+print(paste('Mean Sum of Squares Error (MSSE): ', sum(Error)/sum(CV$TestSize), sep=''));
+
+# Display the trained network (given for last cross-validation fold)
+plot(bestnet);
+
+
+########### Clusteranalyse ###########
+train <- readRDS("anonym_data_kursus.rds")
+X <- train[, c("bolig_areal", "enhed.enhedensanvendelse")]
+y <- train[, c("ejendomsgruppe")]
+Xdf <- data.frame(X)
+## K-means clustering
+# Number of clusters
+K = 4;
+
+# Run k-means
+res = kmeans(Xdf, K);
+i <- res$cluster
+Xc <- res$centers
+
+clusterplot <- function(X, y, i, centroids=c(), ...){
+  
+  if(is.vector(X)){
+    X <- matrix(X, nrow=length(X), byrow=FALSE)
+  }
+  N <- dim(X)[1]
+  M <- dim(X)[2]
+  
+  
+  DoPCA = M>2;
+  
+  if(DoPCA){
+    xlab <- 'PC1'
+    ylab <- 'PC2'
+  }
+  
+  if(!DoPCA){
+    if(is.data.frame(X)){
+      xlab <- colnames(X)[1]
+      ylab <- colnames(X)[2]
+    }else{
+      xlab <- 'Column 1'
+      ylab <- 'Column 2'
+    }
+  }
+  
+  if(DoPCA){
+    cmeans = colMeans(X)
+    XX = sapply(X, function(z) z-mean(z));
+    res <- svd(XX);
+    V <- res$v;
+    X <- XX%*%V[,1:2];
+    if (length(centroids)!=0) {
+      # if cluster centroids have been provided, project them onto the PCA space
+      centroids <- sapply(1:ncol(centroids), function(i) centroids[,i]-cmeans[i])%*%V
+    }  
+  }
+  
+  
+  xRange = c(min(X[,1]), max(X[,1]))
+  xRange = xRange + c(-1, 1)*diff(range(xRange))*0.05;
+  yRange = c(min(X[,2]), max(X[,2]));
+  yRange = yRange + c(-1, 1)*diff(range(yRange))*0.05;
+  
+  # Plot clustering
+  ui = sort(unique(i)); K = length(ui);
+  Ncol <- K
+  clustercols <- rainbow(K)
+  plot(xRange, yRange, type='n', xlab=xlab, ylab=ylab, ...)
+  for(k in 1:K){
+    points(X[i==ui[k],1], X[i==ui[k],2], col=clustercols[((k-1)%%Ncol)+1], lwd=6)
+  }
+  
+  if(length(centroids)!=0){
+    # Plot cluster centroids
+    for(k in 1:dim(centroids)[1]){
+      points(centroids[k,1], centroids[k,2], pch=4, col=clustercols[((k-1)%%Ncol)+1], cex=3, lwd=2);
+    }
+  }
+  
+  uy = sort(unique(y)); C = length(uy);
+  classcols <- rainbow(C+2)[3:(C+2)]
+  Ncol <- C
+  # Plot class labels
+  for(k in 1:C){
+    points(X[y==uy[k],1], X[y==uy[k],2], col=classcols[((k-1)%%Ncol)+1], pch=20)
+  }
+  
+  
+}
+
+
+clusterplot(Xdf, y, i, Xc, main='K-means');
+
+
 
