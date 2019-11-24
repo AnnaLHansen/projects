@@ -275,6 +275,8 @@ y <- train$fremskreven_pris_M2
 x <- train %>% select(EV_NN_M2, bolig_areal, aux.ice_info.jordstykker.registreretareal_fratrukket_vejareal, bolig_alder, bolig_alder) %>% data.matrix()
 lambdas <- 10^seq(3, -3, by = -.2)
 
+
+
 # fit <- glmnet(x, y, alpha = 0, lambda = lambdas)
 # summary(fit)
 # cv_fit <- cv.glmnet(x, y, alpha = 0, lambda = lambdas)
