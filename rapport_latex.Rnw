@@ -178,7 +178,7 @@ plot(cumvar,
 De foeste 16 principal components kan forklare 90\% af variationen i data. For at kommme over 95\% skal man have de 18 første komponenter. Ud af de i alt 23 mulige komponenter er det med dette data ikke muligt at reducerer mange komponenter væk uden også at miste variation i data. 
 Ved at have antallet af komponenter som er mindre end antallet af attributter i ens datasæt bliver information tabt, og hvorvidt man med fordel kan bruge PCA skal bestemmes ud fra den pågældende problemstilling. I den videre opgave har jeg valgt at gå videre med mit originale datasæt som det så ud før PCA. 
 
-\chapter{Part II}
+\chapter{Part II- Supervised learning}
 
 \section{Regression - part A}
 I part II er formålet at bruge det rensede data fra part I til at forudsige fremskrevne handelspriser ud fra forskellige varibable. 
@@ -491,7 +491,7 @@ M <- ncol(X)
 y <- dat[, colnames(dat) == "fremskreven_pris_M2"]
 
 # K-fold crossvalidation
-K = 10;
+K = 5;
 set.seed(1234) # for reproducibility
 CV <- cvFolds(N, K=K)
 # set up vectors that will store sizes of training and test sizes
@@ -553,9 +553,84 @@ plot(bestnet);
 
 \section{Classification}
 
-\chapter{Part III}
+\chapter{Part III - Unsupervised learning}
+I denne del af opgaven bliver der lavet en clusteranalyse, der er bliver foretaget en outlier-detektion og lavet 'association mining'. 
+
+\section{Clustering}
+
+Inden regressionsanalysen blev foretaget blev der lavet en grov sortering af ejendomssalg, således at det udelukkende var rene parcelhussalg som modellen blev trænet på. 
+Alle ejendomme i Danmark bliver registreret i BBR med en enhedsanvendelse. Enhedsanvendelse 120 dækker for eksempel over helt almindelige parcelhuse. 130 dækker over rækkehuse og 510 dækker over sommerhuse. Erhvervsbygninger og ejerlejligheder mm bliver registreret med andre koder. 
+Med en hierakisk clusteranalyse vil jeg forsøge at gruppere disse ejendomme til mindre grupper. Formålet med at gøre dette vil være dels være at undersøge hvor ens ejendommene er på trods af deres forskellige BBR koder. Der er godt og vel 100 forskellige BBR koder som bliver givet. For nogle af disse koder vil der ikke være særlig mange ejendomme i, og det kunne derfor være interessant at se om man vil kunne slå nogle af disse grupper sammen når man træner sin regressionsmodel.
+
+<<>>=
+train <- readRDS("anonym_data_kursus.rds")
+X <- train[, c("bolig_areal", "enhed.enhedensanvendelse", "fremskreven_pris_M2")]
+y <- train[, c("ejendomsgruppe")]
+
+X <- dat$X
+N <- dat$N
+attributeNames <- as.vector(unlist(dat$attributeNames))
+M <- dat$M
+y <- dat$y
+C <- dat$C
+classNames <- as.vector(unlist(dat$classNames))
+# substitute spaces with dots to make handling of columns in data matrix easier
+attributeNames <- gsub(' ', '.', attributeNames)
+Xdf <- data.frame(X)
+colnames(Xdf) <- attributeNames
+
+## K-means clustering
+
+# Number of clusters
+K = 4;
+
+# Run k-means
+res = kmeans(Xdf, K);
+i <- res$cluster
+Xc <- res$centers
+
+## Plot results
+# Plot data
+clusterplot(Xdf, y, i, Xc, main='K-means');
+
+
+X <- dat$X
+N <- dat$N
+attributeNames <- as.vector(unlist(dat$attributeNames))
+M <- dat$M
+y <- dat$y
+C <- dat$C
+classNames <- as.vector(unlist(dat$classNames))
+
+# substitute spaces with dots to make handling of columns in data matrix easier
+attributeNames <- gsub(' ', '.', attributeNames)
+Xdf <- data.frame(X)
+colnames(Xdf) <- attributeNames
+
+## Hierarchical clustering
+# Maximum number of clusters
+Maxclust = 4;
+
+# Compute hierarchical clustering
+hc <- hclust(dist(Xdf), method="single")
+
+# Compute clustering by thresholding the dendrogram
+i <- cutree(hc, k = Maxclust)
+
+## Plot results
+
+# Plot dendrogram
+plclust(hc)
+
+# Plot data
+dev.new()
+clusterplot(Xdf, y, i, main='Hierarchical');
+
+@
 
 
 
+\section{Outlier detection / anomaly detection}
+\section{Association mining}
 
 \end{document}
