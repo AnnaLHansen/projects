@@ -1,7 +1,7 @@
 \documentclass{report}
 
 \usepackage[utf8]{inputenc}
-
+\usepackage[document]{ragged2e}
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 
@@ -32,7 +32,8 @@
 library(dplyr)
 library(knitr)
 library(corrplot)
-setwd("~/projects")
+library(cvTools)
+setwd("~/projects/")
 source("help_func_datainspec.R")
 source("help_func_standardization.R")
 @
@@ -41,18 +42,17 @@ source("help_func_standardization.R")
 \chapter{Part I}
 
 \section{Beskrivelse af data}
-Alle boligejere i Danmark betaler en skat, ejendomsværdiskat, som er baseret på værdien af deres ejendom. Dette vil sige hele ejendommen inkl. grunden som boligen ligger på. For at kunne gøre dette laver den danske stat offentlige ejendomsvurderinger som disse skatter bliver baseret på. 
+Alle boligejere i Danmark betaler en skat, ejendomsværdiskat, som er baseret på værdien af deres ejendom. Dette vil sige værdien af hele ejendommen inkl. den grund som boligen ligger på. For at kunne gøre dette laver den danske stat offentlige ejendomsvurderinger som disse skatter bliver baseret på. 
 Det er derfor vigtigt at disse vurderinger er retvisende og ikke mindst forklarbare, således at en borger kan forstå hvilke parametre der ligger til grund for ejendomsvurderingen. 
-Til dette project har jeg valgt at arbejde med anonymiseret data fra mit arbejde i udviklings- og forenklingsstyrrelsen, hvor jeg til dagligt arbejder med netop dette. Datasættet består af ejendomssalg fra en 6 årig periode. Ud over selve huspriserne består data også af en lang række attributter som beskriver karakteristika ved selve boligen. Det kan f.eks. være tagmateriale, boligens opførelsesår, information om størrelsen af huset og grunden eller bbr koder som dækker over boligens anvendelse. 
-Der ud over består data også af en lang række attributter som fortæller noget om hvor boligens beliggenhed. Det kan f.eks. være boligens koordinater eller information om afstanden til kyst og skov eller afstand til motorvej og jernbane. 
+Til dette project har jeg valgt at arbejde med anonymiseret data fra mit arbejde i udviklings- og forenklingsstyrrelsen, hvor jeg til dagligt arbejder med netop dette. Datasættet består af ejendomssalg fra en 6 årig periode. Ud over selve salgspriserne består data også af en lang række attributter som beskriver karakteristika ved selve boligen. Det kan f.eks. være tagmateriale, boligens opførelsesår, information om størrelsen af huset og grunden eller bbr koder som dækker over boligens anvendelse. 
+Der ud over består data også af en lang række attributter som fortæller noget om hvor boligens beliggenhed. Det kan f.eks. være boligens koordinater, områdepriserne (baseret på de nærmeste nabosalg) eller information om afstanden til kyst og skov eller afstand til motorvej og jernbane. 
 Data kommer fra en række forskellige registre og offentlige styrrelser som eks. BBR og Styrrelsen for Dataforsyning og Effektivisering.
 
 Til dette projekt vil jeg overordnet set prøve at se hvor godt man kan forudsige ejendomsværdier ud fra salgspriserne fra en 6-årig periode. 
 
 Jeg vil med Principal Component Analysis få et overblik over de data der er til rådighed og få et visuelt overblik over attributterne. 
-Herefter vil jeg med en unsupervised learning forsøge at gruppere det data jeg har til at generer yderlige attributer som kan indgå i modellen. Jeg vil her specifikt prøve at se om det er muligt at gruppere salgene i forskellige boligtyper. Jeg vil i samme omgang også forsøge at frasorterer outliers i data med anomaly detection. 
-Herefter vil jeg med regressions model forsøge at kaste lys over projektets overordnede problem ved at forsøge at forudsige huspriserne ud fra salgspriser. I tilfælde af at modellen ikke ikke kan komme med en god prædiktion af en given ejendom vil det være muligt at denne ejendom bliver manuelt værdiansat af en sagsbehandler. Jeg vil derfor til slut med en classifikation forsøge at estimerer om en ejendom skal ud til manuel sagsbehandling baseret på dens estimerede ejendomsværdi.
-
+Herefter vil jeg med unsupervised learning forsøge at gruppere det data jeg har således at jeg ud fra det kan generere yderlige attributter som kan indgå i modellen. Jeg vil her specifikt prøve at se om det er muligt at gruppere salgene i forskellige boligtyper. Jeg vil i samme omgang også forsøge at frasorterer outliers i data med anomaly detection. 
+Herefter vil jeg med regressions model forsøge at kaste lys over projektets overordnede problem ved at forsøge at forudsige huspriserne ud fra salgspriser. I tilfælde af at modellen ikke ikke kan komme med en god prædiktion af en given ejendom vil det være muligt at denne ejendom bliver manuelt værdiansat af en sagsbehandler. Jeg vil derfor til slut med en Klassifikationsmodel forsøge at estimerer om en ejendom skal ud til manuel sagsbehandling baseret på dens estimerede ejendomsværdi.
 
 \section{Detaljeret beskrivelse af data}
 
@@ -60,66 +60,47 @@ Herefter vil jeg med regressions model forsøge at kaste lys over projektets ove
 train <- readRDS("anonym_data_kursus.rds")
 @
 
-
-Det salgsdata som jeg har valgt at arbejde med dækker i udgangspunktet `r nrow(train)` observationer med `r ncol(train)` attributter. Inden jeg går i gang med at kigge på data har jeg valgt at lave en oprydning i data. Det har jeg gjort fordi mange af attributterne bliver i mit daglige arbejde brugt i forbindelse med imødekomme diverse forretningskrav. Desuden dækker observationerne mange forskellige typer af ejendomssalg. Det er en blanding af parcelhussalg, rækkehussalg, sommerhussalg, salg af ejerlejligheder mm. og ud fra et forretningsmæssigt perspektiv giver det ikke mening at træne en model på alle salg og ejendomstypen vil påvirke salgsprisen. F.eks. vil der på sommerhuse være restriktioner på hvor meget om året man må bo i sommerhuset og der kan være i sommerhusområder være andre regler for hvad man må bruge sin grund til end der er i et parcelhusområde. Jeg har derfor ligeledes valgt at reducerer antallet af observationer således at de kun dækker almindelige parcelhus. Dette er gjort ved kun at beholde alle de ejendomssalg, hvor ejendommen i BBR er registreret med enheds- og bygningsanvendelsen 120. 
+Det salgsdata som jeg har valgt at arbejde med dækker i udgangspunktet 305701 observationer med 122 attributter. Inden jeg går i gang med at kigge på data har jeg valgt at lave en oprydning i data.
+Mange af attributterne har ikke noget med selve ejendommen at gøre men er forretningsmæssige oplysninger som ikke er relevante for denne opgave. Desuden dækker observationerne mange forskellige typer af ejendomssalg. Det er en blanding af parcelhussalg, rækkehussalg, sommerhussalg, salg af ejerlejligheder mm. og ud fra et forretningsmæssigt perspektiv giver det ikke mening at træne en model på alle salg da ejendomstypen vil påvirke salgsprisen. F.eks. vil der på sommerhuse være restriktioner på hvor mange dage om året man må bo i sommerhuset og der kan være i sommerhusområder være andre regler for hvad man må bruge sin grund til end der er i et parcelhusområde. Jeg har derfor ligeledes valgt at reducerer antallet af observationer således at de kun dækker almindelige parcelhus. Dette er gjort ved kun at beholde alle de ejendomssalg, hvor ejendommen i BBR er registreret med enheds- og bygningsanvendelsen 120. 
+Inden jeg i denne opgave anvender ejendomssalgene er deres salgspriser blevet fremskrevet til den sidste handelsdato. Det er de gjort med henblik på at neutralisere de prissvingninger som er i den 6 årige periode. Disse vil blive refereret til som de fremskrevne handelspriser. 
 
 <<echo=FALSE>>=
 train <- readRDS("train_klargjort_salg.rds")
 @
 
-Herefter er der `r nrow(train)` observationer tilbage og `r ncol(train)` attributter.
+Når alle disse grove datasorteringer er foretaget er der 241643 observationer tilbage og 106 attributter.
+Hertil kommer det at der er en del af attributterne som mangler værdier for en procentdel af det samlede antal observationer. Det er især i forhold til variable fra BBR, som beskriver forskellige karakteristika ved selve boligen. Her har jeg har valgt at fjerne alle de attributter som har mere end 95\% manglende værdier. (se bilag)
 
-Der er for en del af attributterne en stor andel af manglende værdier. Det er især i forhold til variable fra BBR, som beskriver forskellige karakteristika ved selve boligen. Her har jeg har valgt at fjerne alle de attributter som har mere end 95\% manglende værdier.
-
-<<echo=FALSE>>=
-attribut_oversigt <- readRDS("atrtribut.rds")
-attribut_oversigt <- attribut_oversigt[order(attribut_oversigt$pct_missing_values, decreasing = TRUE),]
-knitr::kable(attribut_oversigt)
-@
-
-Som udgangspunkt vil jeg træne en model som skal være i stand til at kunne prædiktere værdien af et standard
-parcelhus. Data som der skal trænes på skal derfor også være salg af standard parcelhuse.
+Modellen der skal trænes skal som udgangsunkt kunne prædiktere værdien af et standard parcelhus.  Data som modellen trænes på skal derfor også være salg af standard parcelhuse.
 Data er derfor blevet ensrettet på følgende måde:
 
-% - enhed.antalvaerelser > 1 og enhed.antalvaerelser < 10
-% - bolig_areal < 500 og bolig_areal > 50
-% - bolig_alder > 0 og bolig_alder < 100
-% - bygning.antaletager > 0 og bygning.antaletager < 4
-% - enhed.antalbadevaerelser > 0 og enhed.antalbadevaerelser < 4
-% - enhed.antalvandskylledetoiletter > 0 og enhed.antalvandskylledetoiletter < 4
-% - fremskreven_pris_M2 < 30000 og fremskreven_pris_M2 > 0
+\begin{itemize}
+  \item Antallet af værelser skal være større end 1 og mindre en 10.
+  \item Boligarealet skal være større end 50 kvm og mindre end 500 kvm.
+  \item Boligens alder skal være større end 0 men mindre end 100 år.
+  \item Antallet af etager skal være større end 0 og mindre end 4.
+  \item Antallet af badeværelser skal være større end 0 og mindre end 4.
+  \item Antallet af toiletter skal være større end 0 og mindre end 4.
+  \item Den fremskrevne kvm-pris for salgene skal være større end 0 men mindre end 30.000 kr. 
+\end{itemize}
 
-Slutteligt er der blevet taget et valg om kun at udvælge de rå attributter som menes at være de
-vigtigste i forhold til at forudsige værdien af et standad parcelhus.
+Slutteligt er der taget en forretningsmæssig beslutning om at udvælge de attributter som menes at have størst betydning i forhold til at forudsige værdien af et standard parcelhus.
+(se bilag).
+
+De to attributter der dækker over tagtypematriale og ydervægsmateriale er diskrete variable som fordel kan normaliseres med en one-out-of-k transformering.
+
+Afstand til kyst og afstand til motorvej er to variable som jeg har valgt at binariserer. Det er en beslutning som er blevet taget da data for disse to features forud for denne rapport er blevet imputeret. For afstand til kyst er afstanden op til 1500 meter målt. Alt herover er imputeret til 1501 meter. Ligeledes er gjort for afstand til motorvej. Ud fra et forretningsmæssig synspunkt har det afstand til kyst kun en påvirkning på ejendomsprisen hvis kysten ligger inden for omkring 300 meter. Ligeledes er det kun værdipåvirkende hvis en ejendom ligger inden for omkring 100 meter fra en motorvej. Valget med at binarisere disse variable gør at der bliver taget hånd om alle de imputerede værdier, men der bliver selvfølgelig samtidig tabt lidt information ved at gøre dette.
 
 <<echo=FALSE>>=
 train <- readRDS("train_behandlet.rds")
-attribut <- undersoeger_attributter(train)
-knitr::kable(attribut)
-@
-
- 
-De to attributter der dækker over tagtypematriale og ydervægsmateriale er diskrete variable som fordel
-kan normaliseres med en one-out-of-k transformering.
-
-Afstand til kyst og afstand til motorvej er to variable som jeg har valgt at binariserer. Det har jeg da de to
-features forud for denne rapport er blevet imputeret. For afstand til kyst er afstanden op til 1500 meter målt.
-Alt herover er imputeret til 1501 meter. Ligeledes er gjort for afstand til motorvej.
-For at håndtere disse variable har jeg som sagt valgt at binariserer dem. For afstand til kyst har jeg ud fra et
-forretningsmæssigt synspunkt valgt at en ejendom ligger så tæt på kysten at det har en effekt i dens værdi hvis
-den ligger inden for 300 meter af kysten. Det samme er gjort for afstand til vej. Her er grænsen dog blot 100
-meter.
-
-
-<<echo=FALSE>>=
 train <- one_out_of_k(train)
 train <- binarisere_afstande(train)
 @
 
 \section{Data visualisering heriblandt Principal Component Analysis (PCA)}
 
-Principal Component Analysis (PCA) er en metode som kan bruges til at reducere dimensionerne i det data der arbejdes med. Man kan have mange dimensioner i sit datasæt, men hvis de alle sammen er med til at forklare sammen tendens er det 'sande' antal af dimensioner lavere end antallet af attributter. Målet med at lave PCA er at reducere dimensionerne i data uden at reducere variationen, således at man ender op med data som med færre dimensioner men som kan forklare det samme som datasættet med flere dimensioner. PCA fungerer kun ud fra antagelsen om at der er en linear forklaring i data med færre dimensioner. De bedste projektion af data ned på et subspace er dem hvor observationer er spredt ud (Høj varians), men samtidig hvor residualerne reduceres. 
-Vektoren bliver valgt ud fra at den skal være en eigenvektor til vores datamatrix som har den højeste eigenværdi. Singular Value Decomposition (SVD) er en metode som for en hvilken som helst $N*M$ matrix udregner eigenvektoren med den højeste eigenværdi.  
+Principal Component Analysis (PCA) er en metode som kan bruges til at reducere dimensionerne data. Man kan have mange dimensioner data, men hvis de alle sammen er med til at forklare sammen tendens er det 'sande' antal af dimensioner lavere end antallet af attributter. Målet med at lave PCA er at reducere dimensionerne i data uden at reducere variationen, således at man ender op med data som med færre dimensioner, men uden at der tabes information. PCA fungerer kun ud fra antagelsen om at der er en linear forklaring i data med færre dimensioner. De bedste projektioner af data ned på et subspace er dem hvor observationer er spredt ud (høj varians), men samtidig hvor residualerne reduceres. 
+Vektoren bliver valgt ud fra at den skal være en eigenvektor den datamatrice som har den højeste eigenværdi. Singular Value Decomposition (SVD) er en metode som for en hvilken som helst $N*M$ matrix udregner eigenvektoren med den højeste eigenværdi.  
 
 Ejendomsdata er blevet klargjort. Data er blevet tranformeret. Nogle variable er blevet tranformeret med one-out-of-K transformation, mens enkelte er blevet binariseret. 
 Til PCA er det første trin at standardisere data, således at attributternes værdier er på samme skala. Selve standardiseringen består i at trække gennemsnittet fra hver attribut, hvorefter der også er blevet divideret med standardafvigelsen. For data betyder det at hver attribut reskaleres således at de får et gennemsnit på 0 og en standardafvigelse på 1. 
@@ -131,8 +112,6 @@ Resultatet af korrelationsanalysen er vist i et korrelationsplot. Resultatet af 
 Disse to positive sammenhænge giver logik rigtig god mening. Salgspriser er i høj grad styret af det område som ejendommen ligger i. Ligger ejendommen i et dyrt område, vil naboerne blive solgt til høje handelspriser og det samme vil højst sandsynligt også gælde for den specifikke ejendom. 
 Samtidig vil der typisk også være flere væresler jo større boligareal en ejendommene har. 
 
-
-
 <<echo=FALSE, fig=TRUE>>=
 train <- standardize(train)
 correlation <- cor(train)
@@ -143,7 +122,6 @@ corrplot(correlation)
 @
 
 Som en del af PCA udregnes herefter Singular Value Decomposition (SVD).
-
 
 <<echo = FALSE, fig=TRUE>>=
 # Lave singular value decomposition analyse:
@@ -162,9 +140,7 @@ plot(variance,
      xlab = "Principal components",
      ylab = "Forkalret varians",
      col = "deepskyblue")
-@
 
-<<echo = FALSE, fig=TRUE>>=
 plot(cumvar,
      type = "o",
      pch = 16,
@@ -174,16 +150,15 @@ plot(cumvar,
      col = "darkorchid")
 @
 
-
-De foeste 16 principal components kan forklare 90\% af variationen i data. For at kommme over 95\% skal man have de 18 første komponenter. Ud af de i alt 23 mulige komponenter er det med dette data ikke muligt at reducerer mange komponenter væk uden også at miste variation i data. 
+De første 16 principal components kan forklare 90\% af variationen i data. For at kommme over 95\% skal man have de 18 første komponenter. Ud af de i alt 23 mulige komponenter er det med dette data ikke muligt at reducerer mange komponenter væk uden også at miste variation i data. 
 Ved at have antallet af komponenter som er mindre end antallet af attributter i ens datasæt bliver information tabt, og hvorvidt man med fordel kan bruge PCA skal bestemmes ud fra den pågældende problemstilling. I den videre opgave har jeg valgt at gå videre med mit originale datasæt som det så ud før PCA. 
 
 \chapter{Part II- Supervised learning}
 
 \section{Regression - part A}
-I part II er formålet at bruge det rensede data fra part I til at forudsige fremskrevne handelspriser ud fra forskellige varibable. 
+I 2 del er formålet at bruge det rensede data fra del 1 til at forudsige fremskrevne handelspriser ud fra forskellige variable. 
 Håbet med denne regressionsanalyse er at man ud fra relativt få variable og en relativt simpel model vil kunne forudsige ejendomspriserne. 
-Forud for regressionsanalysen er data blevet tranformeret. For faktorvariablene tagtype og vægmateriale har jeg valgt at tranformere med en one-of-k transformering. Herefter er alle attributer blevet standardiseret, således at de har en gennemsnit på 0 og en standardafvigelse på 1. 
+Forud for regressionsanalysen er data blevet tranformeret. For faktorvariablene tagtype og vægmateriale har jeg valgt at tranformere med en one-of-k transformering. Herefter er alle attributter blevet standardiseret, således at de har en gennemsnit på 0 og en standardafvigelse på 1. 
 
 Den første lineære model der fittes er en univariate linear regressionsmodel. Her er naboernes områdepris den eneste variabel som bruges til at forudsige de fremskrevne handelspriser. 
 Denne simple lineaære regression er vist i figuren nedenfor. 
@@ -203,9 +178,8 @@ legend("topleft", legend=c("Data", "Fittet model"), fill=c("black", "red"))
 
 Den anden lineære model der fittes er en multivariate lineær regressionsmodel. 
 Variablene som bliver brugt i modellen er områdepriser i form af naboernes kvadratmeterpriser. Det er boligens opførelsesalder og ombygningsår, og det er boligens og grundens areal. 
-I en multivariate lineær regressionsmodel kan man ikke på samme måde plotte den fittede model på det todimensionelle plot. Her kan man i stedet estimerer vide hvor godt modellen fitter til data ved akan man ved at minimere summen af de kvadrerede afvigelser (RSS). 
+I en multivariate lineær regressionsmodel kan man ikke på samme måde plotte den fittede model på det todimensionelle plot. Her kan man i stedet estimerer hvor godt modellen fitter til data ved at minimere summen af de kvadrerede afvigelser (RSS). 
 Der findes flere forskellige typer af algoritmer hvis formål er at finde de parametre/vægte som laver det bedste fit til data ved at minimerer 'cost'. 
-
 
 <<echo=FALSE, fig=TRUE>>=
 # Estimate model parameters
@@ -246,32 +220,11 @@ Selve den lineære regressionsmodel kan anvanceres ved at tranformere inputvaria
 Målet for denne simple lineære regressionsmodel er reducere 'cost-funktionen' så meget som muligt. For en simpel lineær regressiosmodel er cost-funktionen en squared error, hvilket vil sige at målet her er at reducere 'mean squared error' så meget som muligt - dog uden at overfitte. 
 Andre cost-funktioner kan bruges til andre problemstillinger. En logistisk funktion kan således bruges til at hvis man arbejder med et logistisk regressionsproblem. 
 
-En af de større udfordringer der er indenfor machine learning er 'underfitting' og 'overfitting'. 'Underfitting' er når en model ikke fanger de tendenser som er i data - at modellen er for simpel. 'Overfitting' derimod er når modellen fanger alle små variationer i det data den er trænet på og at den på den måde fanger trends som ikke er der. Det kan ses når man anvender modellen på et nyt datasæt, hvor den i tilfældet af 'overfitting' vil performe dårligt. Overfitting kan forekomme hvis antallet af features er meget højt i forhold til antallet af observationer. 
-Ridge regression og regularisering - ridge regression er regressionsmetode som bruges for at undgå at man overfitter der burger regularisering. Regularisering er er tilpasning der laves til algoritmen som reducerer generalization error ved at bruge en regulariseringsparameter (lambda). Hvis lambda sættes til 0, svarer til det til at modellen ikke bliver regulereret mens en høj lambda reducerer kompleksiteten i modellen.
+Ridge regression - ridge regression er regressionsmetode som bruges for at undgå at man overfitter. Overfitting sker når den fittede model fitter træningsdata rigtig godt, men at den model der trænes ikke generalisere godt på ukendt data. Overfitting kan ske både hvis der er for mange prædiktor variable eller for få observationer. 
+Et godt fit er kendetegnet ved et lav RSS, men også størrelsen på koeffiecienterne - disse to til sammen udgør den samlede 'cost'. I ridge regression bruges l2-normen som et mål for størrelsen på koefficienterne og målet med ridge regression er minimere den samlede 'cost'.
+Dette kan gøres ved at indføre en regulariseringsparameter (lambda), og den kan bruges til at styre kompleksisteten af sin model. 
 
-<<echo=FALSE>>=
-# x1 <- train[1:80000, ] 
-# x2 <- train[80000:185018, ]
-# 
-# dat <- data.frame(x1[, c("EV_NN_M2","bolig_areal")])
-# xnam <- paste("X", 1:2, sep="")
-# colnames(dat) <- xnam
-# y <- train$fremskreven_pris_M2[1:80000]
-# (fmla <- as.formula(paste("y ~ ", paste(xnam, collapse= "+"))))
-# w_est = lm(fmla, data=dat);
-# 
-# # Plot the predictions of the model
-# plot(train$EV_NN_M2, train$fremskreven_pris_M2, main="Linear regression", xlab="X", ylab="y")
-# 
-# newdat <- data.frame(x2[, c("EV_NN_M2","bolig_areal")])
-# colnames(newdat) <- xnam
-# y_est = predict(w_est, newdata=newdat)
-# lines(newdat[,1], y_est, col='red')
-# legend("topleft", legend=c('Data', 'Fitted model'), fill=c("black", "red"))
-@
-
-
-<<echo=false, fig=TRUE>>=
+<<echo=FALSE, fig=TRUE>>=
 dat <- readRDS("train_behandlet_og_standardz.rds")
 X <- dat[, colnames(dat) != "fremskreven_pris_M2"]
 N <- nrow(X)
@@ -449,27 +402,8 @@ for(k in 1:K){
   Error_test_nofeatures[k] = sum((y_test - mean(y_train))^2);
   
 }
-
-# Display Results
-print('Linear regression without feature selection:');
-print(paste('- Training error: ', sum(Error_train)/sum(CV$TrainSize)));
-print(paste('- Test error', sum(Error_test)/sum(CV$TestSize)));
-print(paste('- R^2 train:     %8.2f\n', (sum(Error_train_nofeatures)-sum(Error_train))/sum(Error_train_nofeatures)))
-print(paste('- R^2 test:     %8.2f\n', (sum(Error_test_nofeatures)-sum(Error_test))/sum(Error_test_nofeatures)))
-
-print('Regularized Linear regression:')
-print(paste('- Training error:', sum(Error_train_rlr)/sum(CV$TrainSize)))
-print(paste('- Test error:', sum(Error_test_rlr)/sum(CV$TestSize)))
-print(paste('- R^2 train: ', (sum(Error_train_nofeatures)-sum(Error_train_rlr))/sum(Error_train_nofeatures)))
-print(paste('- R^2 test:', (sum(Error_test_nofeatures)-sum(Error_test_rlr))/sum(Error_test_nofeatures)))
-
-print('Weights in last fold :')
-for(m in 1:M){
-  print(paste(attributeNames[m], w_rlr[m, k]))
-  
-}
-
 @
+
 
 \section{Regression - part B}
 
@@ -478,7 +412,7 @@ Den mest simple form for et kunstigt neuralt netværk er et 'feedforward' netvæ
 Et neuralt netværk kan være fra inputlaget med input features reducere antallet af dimensioner til outputlaget, hvilket gør dem gode til at løse multidemensionelle regressions- og klassifikationsproblemer. 
 I det/de skjulte lag bliver hver at skjulte enheder transformeret med en ikke lineær aktiveringsfunktion. Til træning af dette neurale netværk er det aktiveringsfunktionen "tahn" der er blevet anvendt. 
 
-<<>>=
+<<echo=FALSE, eval=FALSE, fig=TRUE>>=
 library(neuralnet) #install.packages("neuralnet")
 library(cvTools)
 
@@ -562,25 +496,12 @@ Inden regressionsanalysen blev foretaget blev der lavet en grov sortering af eje
 Alle ejendomme i Danmark bliver registreret i BBR med en enhedsanvendelse. Enhedsanvendelse 120 dækker for eksempel over helt almindelige parcelhuse. 130 dækker over rækkehuse og 510 dækker over sommerhuse. Erhvervsbygninger og ejerlejligheder mm bliver registreret med andre koder. 
 Med en hierakisk clusteranalyse vil jeg forsøge at gruppere disse ejendomme til mindre grupper. Formålet med at gøre dette vil være dels være at undersøge hvor ens ejendommene er på trods af deres forskellige BBR koder. Der er godt og vel 100 forskellige BBR koder som bliver givet. For nogle af disse koder vil der ikke være særlig mange ejendomme i, og det kunne derfor være interessant at se om man vil kunne slå nogle af disse grupper sammen når man træner sin regressionsmodel.
 
-<<>>=
+<<echo=FALSE, fig=TRUE>>=
 train <- readRDS("anonym_data_kursus.rds")
-X <- train[, c("bolig_areal", "enhed.enhedensanvendelse", "fremskreven_pris_M2")]
+X <- train[, c("bolig_areal", "enhed.enhedensanvendelse")]
 y <- train[, c("ejendomsgruppe")]
-
-X <- dat$X
-N <- dat$N
-attributeNames <- as.vector(unlist(dat$attributeNames))
-M <- dat$M
-y <- dat$y
-C <- dat$C
-classNames <- as.vector(unlist(dat$classNames))
-# substitute spaces with dots to make handling of columns in data matrix easier
-attributeNames <- gsub(' ', '.', attributeNames)
 Xdf <- data.frame(X)
-colnames(Xdf) <- attributeNames
-
 ## K-means clustering
-
 # Number of clusters
 K = 4;
 
@@ -589,48 +510,100 @@ res = kmeans(Xdf, K);
 i <- res$cluster
 Xc <- res$centers
 
-## Plot results
-# Plot data
+clusterplot <- function(X, y, i, centroids=c(), ...){
+
+if(is.vector(X)){
+X <- matrix(X, nrow=length(X), byrow=FALSE)
+}
+N <- dim(X)[1]
+M <- dim(X)[2]
+
+
+DoPCA = M>2;
+
+if(DoPCA){
+  xlab <- 'PC1'
+  ylab <- 'PC2'
+}
+
+if(!DoPCA){
+  if(is.data.frame(X)){
+    xlab <- colnames(X)[1]
+    ylab <- colnames(X)[2]
+  }else{
+    xlab <- 'Column 1'
+    ylab <- 'Column 2'
+  }
+}
+
+if(DoPCA){
+  cmeans = colMeans(X)
+  XX = sapply(X, function(z) z-mean(z));
+  res <- svd(XX);
+  V <- res$v;
+  X <- XX%*%V[,1:2];
+  if (length(centroids)!=0) {
+    # if cluster centroids have been provided, project them onto the PCA space
+    centroids <- sapply(1:ncol(centroids), function(i) centroids[,i]-cmeans[i])%*%V
+  }  
+}
+
+
+xRange = c(min(X[,1]), max(X[,1]))
+xRange = xRange + c(-1, 1)*diff(range(xRange))*0.05;
+yRange = c(min(X[,2]), max(X[,2]));
+yRange = yRange + c(-1, 1)*diff(range(yRange))*0.05;
+
+# Plot clustering
+ui = sort(unique(i)); K = length(ui);
+Ncol <- K
+clustercols <- rainbow(K)
+plot(xRange, yRange, type='n', xlab=xlab, ylab=ylab, ...)
+for(k in 1:K){
+    points(X[i==ui[k],1], X[i==ui[k],2], col=clustercols[((k-1)%%Ncol)+1], lwd=6)
+  }
+
+if(length(centroids)!=0){
+# Plot cluster centroids
+for(k in 1:dim(centroids)[1]){
+    points(centroids[k,1], centroids[k,2], pch=4, col=clustercols[((k-1)%%Ncol)+1], cex=3, lwd=2);
+  }
+}
+
+uy = sort(unique(y)); C = length(uy);
+classcols <- rainbow(C+2)[3:(C+2)]
+Ncol <- C
+# Plot class labels
+for(k in 1:C){
+    points(X[y==uy[k],1], X[y==uy[k],2], col=classcols[((k-1)%%Ncol)+1], pch=20)
+  }
+
+
+}
+
+
 clusterplot(Xdf, y, i, Xc, main='K-means');
 
-
-X <- dat$X
-N <- dat$N
-attributeNames <- as.vector(unlist(dat$attributeNames))
-M <- dat$M
-y <- dat$y
-C <- dat$C
-classNames <- as.vector(unlist(dat$classNames))
-
-# substitute spaces with dots to make handling of columns in data matrix easier
-attributeNames <- gsub(' ', '.', attributeNames)
-Xdf <- data.frame(X)
-colnames(Xdf) <- attributeNames
-
-## Hierarchical clustering
-# Maximum number of clusters
-Maxclust = 4;
-
-# Compute hierarchical clustering
-hc <- hclust(dist(Xdf), method="single")
-
-# Compute clustering by thresholding the dendrogram
-i <- cutree(hc, k = Maxclust)
-
-## Plot results
-
-# Plot dendrogram
-plclust(hc)
-
-# Plot data
-dev.new()
-clusterplot(Xdf, y, i, main='Hierarchical');
 
 @
 
 
-
 \section{Outlier detection / anomaly detection}
+
 \section{Association mining}
+
+\chapter{Bilag}
+
+<<echo=FALSE>>=
+attribut_oversigt <- readRDS("atrtribut.rds")
+attribut_oversigt <- attribut_oversigt[order(attribut_oversigt$pct_missing_values, decreasing = TRUE),]
+knitr::kable(attribut_oversigt)
+@
+
+<<echo=FALSE>>=
+train <- readRDS("train_behandlet.rds")
+attribut <- undersoeger_attributter(train)
+knitr::kable(attribut)
+@
 
 \end{document}

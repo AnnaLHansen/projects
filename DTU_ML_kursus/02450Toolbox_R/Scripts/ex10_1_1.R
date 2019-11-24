@@ -1,10 +1,10 @@
 # exercise 10.1.1
 rm(list=ls())
-source("setup.R")
+source("DTU_ML_kursus/02450Toolbox_R/setup.R")
 
 # Load data
 library(R.matlab)
-dat <- readMat(file.path('Data', 'synth1.mat'))
+dat <- readMat(file.path('DTU_ML_kursus/02450Toolbox_R/Data', 'synth1.mat'))
 X <- dat$X
 N <- dat$N
 attributeNames <- as.vector(unlist(dat$attributeNames))

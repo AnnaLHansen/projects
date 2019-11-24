@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2019.10.9)  24 NOV 2019 09:47
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2019.10.9)  24 NOV 2019 16:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -242,6 +242,41 @@ Now handling font encoding U ...
    defining Unicode char U+2122 (decimal 8482)
    defining Unicode char U+2423 (decimal 9251)
 ))
+(/usr/share/texlive/texmf-dist/tex/latex/ms/ragged2e.sty
+Package: ragged2e 2009/05/21 v2.1 ragged2e Package (MS)
+
+(/usr/share/texlive/texmf-dist/tex/latex/ms/everysel.sty
+Package: everysel 2011/10/28 v1.2 EverySelectfont Package (MS)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/footmisc/footmisc.sty
+Package: footmisc 2011/06/06 v5.5b a miscellany of footnote facilities
+\FN@temptoken=\toks16
+\footnotemargin=\dimen103
+\c@pp@next@reset=\count88
+Package footmisc Info: Declaring symbol style bringhurst on input line 855.
+Package footmisc Info: Declaring symbol style chicago on input line 863.
+Package footmisc Info: Declaring symbol style wiley on input line 872.
+Package footmisc Info: Declaring symbol style lamport-robust on input line 883.
+
+Package footmisc Info: Declaring symbol style lamport* on input line 903.
+Package footmisc Info: Declaring symbol style lamport*-robust on input line 924
+.
+)
+\CenteringLeftskip=\skip43
+\RaggedLeftLeftskip=\skip44
+\RaggedRightLeftskip=\skip45
+\CenteringRightskip=\skip46
+\RaggedLeftRightskip=\skip47
+\RaggedRightRightskip=\skip48
+\CenteringParfillskip=\skip49
+\RaggedLeftParfillskip=\skip50
+\RaggedRightParfillskip=\skip51
+\JustifyingParfillskip=\skip52
+\CenteringParindent=\skip53
+\RaggedLeftParindent=\skip54
+\RaggedRightParindent=\skip55
+\JustifyingParindent=\skip56
+)
 (/opt/R/3.5.1/lib64/R/share/texmf/tex/latex/Sweave.sty
 Package: Sweave 
 
@@ -253,7 +288,7 @@ Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
-\KV@toks@=\toks16
+\KV@toks@=\toks17
 )
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
@@ -275,21 +310,21 @@ Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
 Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 )
-\Gread@gobject=\count88
+\Gread@gobject=\count89
 ))
-\Gin@req@height=\dimen103
-\Gin@req@width=\dimen104
+\Gin@req@height=\dimen104
+\Gin@req@width=\dimen105
 )
 (/usr/share/texlive/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
 Package: fancyvrb 2008/02/07
 
 Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix 
 <2008/02/07> (tvz)
-\FV@CodeLineNo=\count89
+\FV@CodeLineNo=\count90
 \FV@InFile=\read1
 \FV@TabBox=\box26
-\c@FancyVerbLine=\count90
-\FV@StepNumber=\count91
+\c@FancyVerbLine=\count91
+\FV@StepNumber=\count92
 \FV@OutFile=\write3
 ) (/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
 Package: textcomp 2005/09/27 v1.99g Standard LaTeX package
@@ -489,20 +524,24 @@ LaTeX Font Info:    Try loading font information for TS1+cmr on input line 6.
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    ... okay on input line 6.
+Package ragged2e Info: ABD: executing \RaggedRight on input line 6.
+
+ABD: EverySelectfont initializing macros
+LaTeX Info: Redefining \selectfont on input line 6.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count92
-\scratchdimen=\dimen105
+\scratchcounter=\count93
+\scratchdimen=\dimen106
 \scratchbox=\box27
-\nofMPsegments=\count93
-\nofMParguments=\count94
-\everyMPshowfont=\toks17
-\MPscratchCnt=\count95
-\MPscratchDim=\dimen106
-\MPnumerator=\count96
-\makeMPintoPDFobject=\count97
-\everyMPtoPDFconversion=\toks18
+\nofMPsegments=\count94
+\nofMParguments=\count95
+\everyMPshowfont=\toks18
+\MPscratchCnt=\count96
+\MPscratchDim=\dimen107
+\MPnumerator=\count97
+\makeMPintoPDFobject=\count98
+\everyMPtoPDFconversion=\toks19
 ) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -555,81 +594,142 @@ e
 
 {/usr/share/texlive/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 Chapter 1.
+
+Overfull \hbox (3.32536pt too wide) in paragraph at lines 43--44
+[]\T1/aer/m/n/10 Til dette pro-jekt vil jeg overord-net set prøve at se hvor go
+dt man kan forudsige 
+ []
+
 [1
 
 ]
-LaTeX Font Info:    Try loading font information for T1+aett on input line 62.
- (/usr/share/texlive/texmf-dist/tex/latex/ae/t1aett.fd
-File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
-) [2] [3] [4]
-Overfull \hbox (3.95099pt too wide) in paragraph at lines 223--223
-[]\T1/aer/bx/n/14.4 Data vi-su-alis-er-ing heri-b-landt Prin-ci-pal Com-
+Overfull \hbox (9.52556pt too wide) in paragraph at lines 52--55
+\T1/aer/m/n/10 ikke no-get med selve ejen-dom-men at gøre men er for-ret-ningsm
+æs-sige oplysninger 
+ []
+
+
+Overfull \hbox (6.27588pt too wide) in paragraph at lines 52--55
+\T1/aer/m/n/10 som ikke er rel-e-vante for denne op-gave. Desu-den dækker ob-se
+r-va-tion-erne mange 
+ []
+
+
+Overfull \hbox (7.77557pt too wide) in paragraph at lines 52--55
+\T1/aer/m/n/10 hus-salg, som-mer-hus-salg, salg af ejer-lej-ligheder mm. og ud 
+fra et for-ret-ningsmæs- 
+ []
+
+LaTeX Font Info:    Try loading font information for TS1+aer on input line 64.
+(/opt/R/3.5.1/lib64/R/share/texmf/tex/latex/ts1aer.fd
+File: ts1aer.fd 
+)
+LaTeX Font Info:    Font shape `TS1/aer/m/n' in size <10> not available
+(Font)              Font shape `TS1/cmr/m/n' tried instead on input line 64.
+ [2]
+Overfull \hbox (12.21504pt too wide) in paragraph at lines 78--79
+\T1/aer/m/n/10 tanden op til 1500 me-ter målt. Alt herover er im-put-eret til 1
+501 me-ter. Ligeledes 
+ []
+
+
+Overfull \hbox (11.15094pt too wide) in paragraph at lines 81--81
+[]\T1/aer/bx/n/14.4 Data vi-su-alis-er-ing heri-b-landt Prin-ci-pal Com- 
  []
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 226.
+(Font)              <7> on input line 84.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 226.
-[5] [6] <rapport_latex-007.pdf, id=32, 433.62pt x 433.62pt>
+(Font)              <5> on input line 84.
+
+Overfull \hbox (5.56488pt too wide) in paragraph at lines 86--89
+\T1/aer/m/n/10 med stan-dard-afvigelsen. For data be-ty-der det at hver at-trib
+ut reskaleres således 
+ []
+
+[3]
+LaTeX Font Info:    Try loading font information for T1+aett on input line 97.
+ (/usr/share/texlive/texmf-dist/tex/latex/ae/t1aett.fd
+File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
+)
+<rapport_latex-005.pdf, id=22, 433.62pt x 433.62pt>
+File: rapport_latex-005.pdf Graphic file (type pdf)
+
+<use rapport_latex-005.pdf>
+Package pdftex.def Info: rapport_latex-005.pdf used on input line 123.
+(pdftex.def)             Requested size: 276.00105pt x 276.0139pt.
+ [4]
+<rapport_latex-006.pdf, id=27, 433.62pt x 433.62pt>
+File: rapport_latex-006.pdf Graphic file (type pdf)
+
+<use rapport_latex-006.pdf>
+Package pdftex.def Info: rapport_latex-006.pdf used on input line 127.
+(pdftex.def)             Requested size: 276.00105pt x 276.0139pt.
+ [5 <./rapport_latex-005.pdf>] [6 <./rapport_latex-006.pdf>]
+Chapter 2.
+<rapport_latex-007.pdf, id=46, 433.62pt x 433.62pt>
 File: rapport_latex-007.pdf Graphic file (type pdf)
 
 <use rapport_latex-007.pdf>
-Package pdftex.def Info: rapport_latex-007.pdf used on input line 267.
+Package pdftex.def Info: rapport_latex-007.pdf used on input line 142.
 (pdftex.def)             Requested size: 276.00105pt x 276.0139pt.
+ [7
 
-<rapport_latex-008.pdf, id=33, 433.62pt x 433.62pt>
+] [8 <./rapport_latex-007.pdf>]
+<rapport_latex-008.pdf, id=59, 433.62pt x 433.62pt>
 File: rapport_latex-008.pdf Graphic file (type pdf)
 
 <use rapport_latex-008.pdf>
-Package pdftex.def Info: rapport_latex-008.pdf used on input line 272.
+Package pdftex.def Info: rapport_latex-008.pdf used on input line 204.
 (pdftex.def)             Requested size: 276.00105pt x 276.0139pt.
+ [9]
+Overfull \hbox (2.50565pt too wide) in paragraph at lines 206--212
+[]\T1/aer/m/n/10 Evalueringen af den lineære model kan foregå ved at man træner
+ på et datasæt 
+ []
 
-<rapport_latex-009.pdf, id=34, 433.62pt x 433.62pt> [7 <./rapport_latex-007.pdf
->]
+[10 <./rapport_latex-008.pdf>]
+<rapport_latex-009.pdf, id=72, 433.62pt x 433.62pt>
 File: rapport_latex-009.pdf Graphic file (type pdf)
- <use rapport_latex-009.pdf>
-Package pdftex.def Info: rapport_latex-009.pdf used on input line 274.
-(pdftex.def)             Requested size: 276.00105pt x 276.0139pt.
- [8 <./rapport_latex-008.pdf>] [9 <./rapport_latex-009.pdf>]
-Chapter 2.
-<rapport_latex-010.pdf, id=61, 433.62pt x 433.62pt>
-File: rapport_latex-010.pdf Graphic file (type pdf)
 
-<use rapport_latex-010.pdf>
-Package pdftex.def Info: rapport_latex-010.pdf used on input line 290.
+<use rapport_latex-009.pdf>
+Package pdftex.def Info: rapport_latex-009.pdf used on input line 217.
 (pdftex.def)             Requested size: 276.00105pt x 276.0139pt.
- [10
-
-] [11 <./rapport_latex-010.pdf>]
-<rapport_latex-011.pdf, id=74, 433.62pt x 433.62pt>
+ [11 <./rapport_latex-009.pdf>] [12]
+Chapter 3.
+<rapport_latex-011.pdf, id=86, 433.62pt x 433.62pt>
 File: rapport_latex-011.pdf Graphic file (type pdf)
 
 <use rapport_latex-011.pdf>
-Package pdftex.def Info: rapport_latex-011.pdf used on input line 353.
+Package pdftex.def Info: rapport_latex-011.pdf used on input line 239.
 (pdftex.def)             Requested size: 276.00105pt x 276.0139pt.
- [12] [13 <./rapport_latex-011.pdf>] [14]
-Chapter 3.
+ [13
+
+] [14 <./rapport_latex-011.pdf>]
+Chapter 4.
 [15
 
-] (./rapport_latex.aux) ) 
+] [16] [17] [18] (./rapport_latex.aux) ) 
 Here is how much of TeX's memory you used:
- 3002 strings out of 495063
- 41611 string characters out of 3182201
- 103757 words of memory out of 3000000
- 6106 multiletter control sequences out of 15000+200000
- 27852 words of font info for 55 fonts, out of 3000000 for 9000
+ 3211 strings out of 495063
+ 45369 string characters out of 3182201
+ 106833 words of memory out of 3000000
+ 6299 multiletter control sequences out of 15000+200000
+ 28187 words of font info for 56 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 37i,5n,23p,1175b,276s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
-m/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr1
-0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on rapport_latex.pdf (16 pages, 51320260 bytes).
+ 37i,5n,23p,968b,278s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/texlive/texmf-dist/fonts/en
+c/dvips/cm-super/cm-super-ts1.enc}</usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on rapport_latex.pdf (19 pages, 74544141 bytes).
 PDF statistics:
- 115 PDF objects out of 1000 (max. 8388607)
- 79 compressed objects within 1 object stream
+ 137 PDF objects out of 1000 (max. 8388607)
+ 95 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 30 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 35 words of extra memory for PDF output out of 10000 (max. 10000000)
 
