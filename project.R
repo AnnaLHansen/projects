@@ -405,7 +405,6 @@ print(paste('- Test error:', sum(Error_test_rlr)/sum(CV$TestSize)))
 print(paste('- R^2 train: ', (sum(Error_train_nofeatures)-sum(Error_train_rlr))/sum(Error_train_nofeatures)))
 print(paste('- R^2 test:', (sum(Error_test_nofeatures)-sum(Error_test_rlr))/sum(Error_test_nofeatures)))
 
-
 print('Weights in last fold :')
 for(m in 1:M){
   print(paste(attributeNames[m], w_rlr[m, k]))

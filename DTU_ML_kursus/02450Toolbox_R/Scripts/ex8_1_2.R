@@ -1,11 +1,11 @@
 # exercise 8.1.2
 rm(list=ls())
-source("setup.R")
+source("DTU_ML_kursus/02450Toolbox_R/setup.R")
 library(cvTools)
 
 # Load data
 library(R.matlab)
-dat <- readMat(file.path('Data', 'wine2.mat'))
+dat <- readMat(file.path('DTU_ML_kursus/02450Toolbox_R/Data', 'wine2.mat'))
 X <- dat$X
 N <- dat$N
 attributeNames <- as.vector(unlist(dat$attributeNames))

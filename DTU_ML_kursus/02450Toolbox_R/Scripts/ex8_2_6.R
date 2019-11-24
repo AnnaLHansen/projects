@@ -1,13 +1,13 @@
 # exercise 8.2.6
 rm(list=ls())
 graphics.off() # close all open graphics windows
-source("setup.R")
+source("DTU_ML_kursus/02450Toolbox_R/setup.R")
 library(neuralnet) #install.packages("neuralnet")
 library(cvTools)
 
 # Load data
 library(R.matlab)
-dat <- readMat(file.path('Data', 'wine2.mat'))
+dat <- readMat(file.path('DTU_ML_kursus/02450Toolbox_R/Data', 'wine2.mat'))
 X <- dat$X
 N <- as.numeric(dat$N)
 attributeNames <- as.vector(unlist(dat$attributeNames))

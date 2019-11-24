@@ -235,6 +235,8 @@ Resultatet af korrelationsanalysen er vist i et korrelationsplot. Resultatet af 
 Disse to positive sammenhænge giver logik rigtig god mening. Salgspriser er i høj grad styret af det område som ejendommen ligger i. Ligger ejendommen i et dyrt område, vil naboerne blive solgt til høje handelspriser og det samme vil højst sandsynligt også gælde for den specifikke ejendom. 
 Samtidig vil der typisk også være flere væresler jo større boligareal en ejendommene har. 
 
+
+
 \begin{Schunk}
 \begin{Soutput}
  [1] "fremskreven_pris_M2"                                          
@@ -266,13 +268,14 @@ Samtidig vil der typisk også være flere væresler jo større boligareal en eje
 
 Som en del af PCA udregnes herefter Singular Value Decomposition (SVD).
 
-\includegraphics{rapport_latex-008}
 
-De foeste 16 principal components kan forklare 90\% af variationen i data. For at kommme over 95\% skal man have de 18 første komponenter. Ud af de i alt 23 mulige komponenter er det med dette data ikke muligt at reducerer mange komponenter væk uden også at miste variation i data. 
-Ved at have antallet af komponenter som er mindre end antallet af attributter i ens datasæt bliver information tabt, og hvorvidt man med fordel kan bruge PCA skal bestemmes ud fra den pågældende problemstilling. I den videre opgave har jeg valgt at gå videre med mit originale datasæt som det så ud før PCA. 
+\includegraphics{rapport_latex-008}
 
 \includegraphics{rapport_latex-009}
 
+
+De foeste 16 principal components kan forklare 90\% af variationen i data. For at kommme over 95\% skal man have de 18 første komponenter. Ud af de i alt 23 mulige komponenter er det med dette data ikke muligt at reducerer mange komponenter væk uden også at miste variation i data. 
+Ved at have antallet af komponenter som er mindre end antallet af attributter i ens datasæt bliver information tabt, og hvorvidt man med fordel kan bruge PCA skal bestemmes ud fra den pågældende problemstilling. I den videre opgave har jeg valgt at gå videre med mit originale datasæt som det så ud før PCA. 
 
 \chapter{Part II}
 
@@ -290,6 +293,7 @@ Den anden lineære model der fittes er en multivariate lineær regressionsmodel.
 Variablene som bliver brugt i modellen er områdepriser i form af naboernes kvadratmeterpriser. Det er boligens opførelsesalder og ombygningsår, og det er boligens og grundens areal. 
 I en multivariate lineær regressionsmodel kan man ikke på samme måde plotte den fittede model på det todimensionelle plot. Her kan man i stedet estimerer vide hvor godt modellen fitter til data ved akan man ved at minimere summen af de kvadrerede afvigelser (RSS). 
 Der findes flere forskellige typer af algoritmer hvis formål er at finde de parametre/vægte som laver det bedste fit til data ved at minimerer 'cost'. 
+
 
 \begin{Schunk}
 \begin{Soutput}
@@ -336,7 +340,7 @@ bolig_areal                                                   ***
 aux.ice_info.jordstykker.registreretareal_fratrukket_vejareal ***
 bolig_alder                                                   ***
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 Residual standard error: 0.5815 on 185013 degrees of freedom
 Multiple R-squared:  0.6618,	Adjusted R-squared:  0.6618 
@@ -355,15 +359,22 @@ Selve den lineære regressionsmodel kan anvanceres ved at tranformere inputvaria
 Målet for denne simple lineære regressionsmodel er reducere 'cost-funktionen' så meget som muligt. For en simpel lineær regressiosmodel er cost-funktionen en squared error, hvilket vil sige at målet her er at reducere 'mean squared error' så meget som muligt - dog uden at overfitte. 
 Andre cost-funktioner kan bruges til andre problemstillinger. En logistisk funktion kan således bruges til at hvis man arbejder med et logistisk regressionsproblem. 
 
-\includegraphics{rapport_latex-012}
 
 Ridge regression - ridge regression er regressionsmetode som bruges for at undgå at man overfitter. Overfitting sker når den fittede model fitter træningsdata rigtig godt, men at den model der trænes ikke generalisere godt på ukendt data. Overfitting kan ske både hvis der er for mange prædiktor variable eller for få observationer. 
 Et godt fit er kendetegnet ved et lav RSS, men også størrelsen på koeffiecienterne - disse to til sammen udgør den samlede 'cost'. I ridge regression bruges l2-normen som et mål for størrelsen på koefficienterne og målet med ridge regression er minimere den samlede 'cost'.
 Dette kan gøres ved at indføre en regulariseringsparameter (lambda), og den kan bruges til at styre kompleksisteten af sin model. 
 
-\begin{Schunk}
-\begin{Sinput}
-> y <- train$fremskreven_pris_M2
-> x <- train %>% select(EV_NN_M2, bolig_areal, aux.ice_info.jordstykker.registreretareal_fratrukket_vejareal, bolig_alder, bolig_alder) %>% data.matrix()
-> lambdas <- 10^seq(3, -3, by = -.2)
-> fit <- glmnet(x, y, alpha = 0, lambda = lambdas)
+
+
+
+
+\section{Regression - part B}
+
+\section{Classification}
+
+\chapter{Part III}
+
+
+
+
+\end{document}
