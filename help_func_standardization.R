@@ -44,6 +44,8 @@ standardize <- function(X)
   # Standardize the matrix X, that is, subtract mean and divide by standard deviation to yield matrix of zero mean and variance one.
   #
   # Author: Laura Frølich, lff@imm.dtu.dk
+  X$ejendomsgruppe <- as.numeric(as.factor(X$ejendomsgruppe))
+
   Xmean <- colMeans(X, na.rm = TRUE)
   Xnomean <- X-matrix(rep(Xmean, times=nrow(X)), byrow=TRUE, nrow=nrow(X))
   

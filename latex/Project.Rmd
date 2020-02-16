@@ -1,0 +1,218 @@
+---
+title: "Property valutation"
+output: html_document
+---
+
+## Part I
+
+```{r, echo = FALSE}
+train <- readRDS("~/anonym_data_kursus.rds")
+train_red <- train[,!grepl("NN", colnames(train))]
+train_red$aux.ice_info.adresse.afstand_kyst <- gsub(1501, NA, train_red$aux.ice_info.adresse.afstand_kyst)
+var <- c("aux.ice_info.adresse.afstand_trafikvej_fordeling", "aux.ice_info.adresse.afstand_trafikvej_gennemfart", 
+"aux.ice_info.adresse.afstand_motorvej_motortrafikvej",
+"aux.ice_info.adresse.afstand_station_metro",
+"aux.ice_info.adresse.afstand_station_s_tog",
+"aux.ice_info.adresse.afstand_station_tog"
+
+)
+for(i in var){
+  train_red[[i]] <- gsub(2001, NA, train_red[[i]])
+}
+
+var <- c("aux.ice_info.adresse.afstand_jernbane_any",
+         "aux.ice_info.adresse.afstand_stor_skov",
+         "aux.ice_info.adresse.afstand_lokalnet_hoejspaending",
+         "aux.ice_info.adresse.afstand_regionalnet_hoejspaending",
+         "aux.ice_info.adresse.afstand_transmissionsnet_hoejspaending",
+         "aux.ice_info.adresse.afstand_stort_vandloeb"
+)
+for(i in var){
+  train_red[[i]] <- gsub(1001, NA, train_red[[i]])
+}
+
+var <- c("aux.ice_info.adresse.afstand_stor_soe"
+)
+for(i in var){
+  train_red[[i]] <- gsub(501, NA, train_red[[i]])
+}
+
+var <- c("aux.ice_info.adresse.afstand_lille_vindmoelle",
+         "aux.ice_info.adresse.afstand_mellem_vindmoelle",
+         "aux.ice_info.adresse.afstand_stor_vindmoelle"
+         
+)
+for(i in var){
+  train_red[[i]] <- gsub(3001, NA, train_red[[i]])
+}
+
+```
+
+**Description of data** \
+Alle boligejere i Danmark betaler skat, ejendomsværdiskat, som er baseret på værdien af deres ejendom. Dette vil sige hele ejendommen inkl. grunden som boligen ligger på. For at kunne gøre dette laver den danske stat offentlige ejendomsvurderinger som disse skatter bliver regnet ud fra. 
+Det er derfor vigtigt at disse vurderinger er retvisende og ikke mindst forklarbare, således at en borger kan forstå hvilke parametre der ligger til grund for ejendomsvurderingen. 
+Til dette project har jeg valgt at arbejde med anonymiseret data fra mit arbejde, hvor jeg til dagligt arbejder med netop denne dette problem. Datasættet består af boligsalg fra en 6 årig periode. Ud over selve huspriserne består data også af en lang række attributter som beskriver karakteristika ved selve boligen. Det kan f.eks. være tagmateriale, boligens opførelsesår, information om størrelsen af huset og grunden eller bbr koder som dækker over boligens anvendelse. 
+Der ud over består data også af en lang række attributter som fortæller noget om hvor boligens beliggenhed. Det kan f.eks. være boligens koordinater eller information om afstanden til kyst og skov eller afstand til motorvej og jernbane. 
+Data kommer fra en række forskellige registre og offentlige styrrelser som eks. BBR og Styrrelsen for Dataforsyning og Effektivisering.
+
+Til dette project vil jeg ved overordnet set prøve at se hvor godt man kan forudsige huspriser ud fra salgspriserne. Jeg vil med Principal Component Analysis få et overblik over de data der er til rådighed og få et visuelt overblik over attributterne. 
+Herefter vil jeg med en unsupervised learning forsøge at gruppere det data jeg har til at generer yderlige attributer som kan indgå i modellen. Jeg vil her specifikt prøve at se om det er muligt at gruppere salgene i forskellige boligtyper. Jeg vil i samme omgang også forsøge at frasorterer outliers i data med anomaly detection. 
+Herefter vil jeg med regressions model forsøge at kaste lys over projektets overordnede problem ved at forsøge at forudsige huspriserne ud fra salgspriser. I tilfælde af at modellen ikke ikke kan komme med en god prædiktion af en given ejendom vil det være muligt at denne ejendom bliver manuelt værdiansat af en sagsbehandler. Jeg vil derfor til slut med en classifikation forsøge at estimerer om en ejendom skal ud til manuel sagsbehandling baseret på dens estimerede ejendomsværdi.
+
+## Part II
+
+**Description of the attributes** \
+
+```{r, echo = FALSE}
+a <- data.frame("attributes" = colnames(train_red),
+                "descrete_continous" = "",
+                "attribute_type" = "",
+                "attribute_class" = "")
+a[["missing_values"]] <- sapply(1:nrow(a), function(x) sum(is.na(train_red[, x])))
+
+
+a[["descrete_continous"]] <-
+ifelse(
+grepl("^aux.ice_info.adresse.afstand", a$attributes) |
+grepl("^aux.ice_info.adresse.areal", a$attributes) |
+grepl("^aux.ice_info.adresse.udsigt", a$attributes) |
+grepl("^aux.adresse.etrs", a$attributes) |
+grepl("^aux.ice_info.bygning", a$attributes) |
+grepl("^aux.ice_info.*opsummeret_delj", a$attributes) |
+grepl("^aux.ice_info.jordstykker.", a$attributes) |
+grepl("^bolig", a$attributes) |
+grepl("^bygning.areal", a$attributes) |
+grepl("bygning.*areal$", a$attributes) |
+grepl("^aux.adresse.etrs", a$attributes) |
+grepl("^bygning.*aar$", a$attributes) |
+grepl("^enhed.antal*", a$attributes) |
+grepl("^enhed.*areal", a$attributes) |
+grepl("^etage.*areal$", a$attributes) |
+grepl("^etage.areal", a$attributes) |
+grepl("^aux.ice_info.bb_anvendelse*", a$attributes) |
+grepl("^ice_info.*delgrund$", a$attributes) |
+grepl("enhed.*varme*", a$attributes) |
+grepl("bygning.*varme*", a$attributes) |
+grepl("forhold$", a$attributes) |
+grepl("bygning.antaletager", a$attributes) |
+grepl("ombyg_alder", a$attributes) |
+grepl("aux.adresse.regionskode", a$attributes) |
+grepl("aux.adresse.etage", a$attributes) |
+grepl("bygning.bygningensanvendelse", a$attributes) |
+grepl("bygning.tagdaekningsmateriale", a$attributes) |
+grepl("bygning.vandforsyning", a$attributes) |
+grepl("bygning.ydervaeggensmateriale", a$attributes) |
+grepl("ejendomsgruppe", a$attributes) |
+grepl("enhed.energiforsyning", a$attributes) |
+grepl("enhed.enhedensanvendelse", a$attributes) |
+grepl("etage.bygningensetagebetegnelse", a$attributes) |
+grepl("region_nr", a$attributes) |
+grepl("aux.vurbenyttelseskode", a$attributes),
+"descrete",
+ifelse(
+grepl("ice_info.min_koteletratiobuff250", a$attributes) |
+grepl("fremskreven_pris", a$attributes) |
+grepl("fremskreven_pris_M2", a$attributes),
+"continous",
+
+""
+)
+)
+
+
+
+a[["attribute_type"]] <-
+ifelse(
+grepl("^aux.ice_info.adresse.afstand", a$attributes) |
+grepl("^aux.ice_info.adresse.areal", a$attributes) |
+grepl("^aux.ice_info.adresse.udsigt", a$attributes) |
+grepl("^aux.ice_info.bygning", a$attributes) |
+grepl("^aux.ice_info.*opsummeret_delj", a$attributes) |
+grepl("^aux.ice_info.jordstykker.", a$attributes) |
+grepl("^bolig", a$attributes) |
+grepl("^bygning.areal", a$attributes) |
+grepl("bygning.*areal$", a$attributes) |
+grepl("^enhed.antal*", a$attributes) |
+grepl("^enhed.*areal", a$attributes) |
+grepl("^etage.*areal$", a$attributes) |
+grepl("^etage.areal", a$attributes) |
+grepl("^aux.ice_info.bb_anvendelse*", a$attributes) |
+grepl("^ice_info.*delgrund$", a$attributes),
+"ratio",
+ifelse(
+grepl("^aux.adresse.etrs", a$attributes) |
+grepl("^bygning.*aar$", a$attributes) |
+grepl("ice_info.min_koteletratiobuff250", a$attributes) |
+grepl("bygning.antaletager", a$attributes) |
+grepl("ombyg_alder", a$attributes)|
+grepl("fremskreven_pris", a$attributes) |
+grepl("fremskreven_pris_M2", a$attributes),
+"interval",
+ifelse(
+grepl("enhed.*varme*", a$attributes) |
+grepl("bygning.*varme*", a$attributes) |
+grepl("forhold$", a$attributes) |
+grepl("aux.adresse.regionskode", a$attributes) |
+grepl("aux.adresse.etage", a$attributes) |
+grepl("bygning.bygningensanvendelse", a$attributes) |
+grepl("bygning.tagdaekningsmateriale", a$attributes) |
+grepl("bygning.vandforsyning", a$attributes) |
+grepl("bygning.ydervaeggensmateriale", a$attributes) |
+grepl("ejendomsgruppe", a$attributes) |
+grepl("enhed.energiforsyning", a$attributes) |
+grepl("enhed.enhedensanvendelse", a$attributes) |
+grepl("etage.bygningensetagebetegnelse", a$attributes) |
+grepl("region_nr", a$attributes) |
+grepl("aux.vurbenyttelseskode", a$attributes),
+"nomial",
+""
+)
+)
+)
+
+attr <- as.character(a$attributes)
+a$attribute_class <- sapply(attr, function(x) class(train_red[[x]]))
+```
+
+```{r, echo=FALSE, eval=FALSE}
+knitr::kable(a)
+```
+
+```{r, echo=FALSE}
+b <- matrix(table(a$descrete_continous, a$attribute_type), nrow = 2)
+rownames(b) <- c("continous", "descrete")
+colnames(b) <- c("interval", "normial", "ratio")
+knitr::kable(b)
+```
+
+
+
+Data består af `r ncol(train_red) ` attributter med hver `r nrow(train_red)` observationer. 
+Tabellen ovenfor viser de forskellige atttributter i data og er et datasæt som består af *records* - dvs. det er en samling af observationer og deres attributter. 
+
+**Issues with data** \
+Der er i data flere uhensigtsmæssigheder som der skal tages højde for. Datasættet består af solgte boligenheder. Det er dog en stor blanding af boligenheder på tværs af alle typer af ejendomme. Det kan være alt fra erhversejendomme til almindelige parcelhus til ejerlejligheder og landbrugsejendomme. 
+Da disse typer af ejendomme vil være meget forskellige - Alle disse forskellige typer af ejendomme vil ikke kunne blive værdiansat ud fra samme model. Salgsprisen for en ejendom vil være påvirket af hvilken ejendomstype der handles med da der kan være forskel på hvad man kan bruge ejendommen til. Eks. vil et sommerhus ikke blive værdiansat på samme måde som et parcelhus da der er forskel i hvor store del af året man må bo i et sommerhus i forhold til et parcelhus. 
+
+Det første delmål vil derfor være at identificerer alle almindelige parcelhuse og træne en model til at værdiansætte parcelhuse. 
+
+En anden uhensigtsmæssighed i forhold til data er at alle afstandsmålene (*eks. afstand til kyst "aux.ice_info.adresse.afstand_kyst"*) er kun tilgængelig hvis den pågældende boligenhed har en afstand til kyst som er mindre end 1500 meter. Hvis Ikke er det vurderert at afstand til kyst ikke har nogen merværdi i forhold til prisen på enheden. I forhold til data giver dette nogle problemer da vi for alle de steder hvor afstanden er større end eks. 1500 har missing values (*NA*).
+
+**Basic summary statistics** \
+
+
+## Part III 
+
+
+**Part 3 - Data visualizations based on suitable viasualization techniques including a principal component analysis (PCA)**
+- Are there issues with outliers in the data?
+- Do the attributes appear to be normal distributes?
+- Are variables correlated?
+- Does the primary machine learning modelling aim appear feasible based on your visualizations?
+- Describe the amount of variation as a function of the number of PCA components
+- Describe the principal directions of the considered PCA components (plot or interpret them in terms of features?)
+- describe the data projected onto the considered principal components.
+(remember to standardiza the data if nessecary)
+**part 4 - A descussion explaining what you have learned about the data** 
+
+

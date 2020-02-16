@@ -1,8 +1,4 @@
-klargoer_salg <- function(df) {
-  df <- df[, !grepl("^NN", colnames(df))]
-  df <- df[df$ejendomsgruppe %in% c("pcl_byzone", "pcl_landzone"),]
-  df <- df[, !grepl("ejendomsgruppe", colnames(df))]
-  
+imputerer_og_samler_geodata <- function(df) {
   df$aux.ice_info.adresse.afstand_kyst <- ifelse(is.na(df$aux.ice_info.adresse.afstand_kyst), 
                                                  1501,
                                                  df$aux.ice_info.adresse.afstand_kyst)
@@ -59,6 +55,36 @@ klargoer_salg <- function(df) {
     df[[i]] <- ifelse(is.na(df[[i]]), 3001, df[[i]])
   }
   
+  
+  
+  a <- colnames(df)[grepl("station", colnames(df))]
+  df[["aux.ice_info.adresse.afstand_station_any"]] <- sapply(1:nrow(df), function(x){
+    pmin(df[x,a[[1]]],
+         df[x,a[[2]]],
+         df[x,a[[3]]], na.rm = TRUE)
+  })
+  
+  a <- colnames(df)[grepl("^aux.ice_info.adresse.afstand.*soe$", colnames(df))]
+  df[["aux.ice_info.adresse.afstand_soe_any"]] <- sapply(1:nrow(df), function(x){
+    pmin(df[x,a[[1]]],
+         df[x,a[[2]]],
+         df[x,a[[3]]], na.rm = TRUE)
+  })
+  
+  a <- colnames(df)[grepl("^aux.ice_info.adresse.afstand.*vandloeb$", colnames(df))]
+  df[["aux.ice_info.adresse.afstand_vandloeb_any"]] <- sapply(1:nrow(df), function(x){
+    pmin(df[x,a[[1]]],
+         df[x,a[[2]]],
+         df[x,a[[3]]], na.rm = TRUE)
+  })
+  
+  a <- colnames(df)[grepl("^aux.ice_info.adresse.afstand.*hoejspaending$", colnames(df))]
+  df[["aux.ice_info.adresse.afstand_hoejspaending_any"]] <- sapply(1:nrow(df), function(x){
+    pmin(df[x,a[[1]]],
+         df[x,a[[2]]],
+         df[x,a[[3]]], na.rm = TRUE)
+  })
+  
   return(df)
 }
 
@@ -68,9 +94,6 @@ undersoeger_attributter <- function(df){
                   "descrete_continous" = "",
                   "attribute_type" = "",
                   "attribute_class" = "")
-  a[["missing_values"]] <- sapply(1:nrow(a), function(x) sum(is.na(df[, x])))
-  a[["pct_missing_values"]] <- sapply(1:nrow(a), function(x) (a[["missing_values"]][x] / nrow(train)) *100
-  )
   
   a[["descrete_continous"]] <-
     ifelse(
@@ -180,48 +203,32 @@ undersoeger_attributter <- function(df){
 }
 
 
-samler_variable <- function(df){
-  a <- colnames(df)[grepl("station", colnames(df))]
-  
-  df[["aux.ice_info.adresse.afstand_station_any"]] <- sapply(1:nrow(df), function(x){
-    pmin(df[x,a[[1]]],
-        df[x,a[[2]]],
-        df[x,a[[3]]], na.rm = TRUE)
-  })
+missing_table <- function(df){
+  a <- data.frame("attributter" = colnames(df))
 
-  a <- colnames(df)[grepl("^aux.ice_info.adresse.afstand.*soe$", colnames(df))]
-  df[["aux.ice_info.adresse.afstand_soe_any"]] <- sapply(1:nrow(df), function(x){
-    pmin(df[x,a[[1]]],
-        df[x,a[[2]]],
-        df[x,a[[3]]], na.rm = TRUE)
-  })
+  a[["missing_values"]] <- sapply(1:nrow(a), function(x) sum(is.na(df[, x])))
+  a[["pct_missing_values"]] <- round(sapply(1:nrow(a), function(x) (a[["missing_values"]][x] / nrow(train)) *100
+  ), 2)
   
-  a <- colnames(df)[grepl("^aux.ice_info.adresse.afstand.*vandloeb$", colnames(df))]
-  df[["aux.ice_info.adresse.afstand_vandloeb_any"]] <- sapply(1:nrow(df), function(x){
-    pmin(df[x,a[[1]]],
-        df[x,a[[2]]],
-        df[x,a[[3]]], na.rm = TRUE)
-  })
   
-  a <- colnames(df)[grepl("^aux.ice_info.adresse.afstand.*hoejspaending$", colnames(df))]
-  df[["aux.ice_info.adresse.afstand_hoejspaending_any"]] <- sapply(1:nrow(df), function(x){
-    pmin(df[x,a[[1]]],
-        df[x,a[[2]]],
-        df[x,a[[3]]], na.rm = TRUE)
-  })
+  a <- a[order(a$pct_missing_values, decreasing = TRUE),]
   
-  return(df)
+  return(a)
 }
 
 
-missing_values_pct95 <- function(attribut, df){
-  attributter_som_fjernes <- as.character(attribut[attribut$pct_missing_values > 95, "attributes"])
+missing_values_pct90 <- function(missing_table, df){
+  attributter_som_fjernes <- as.character(missing_table[missing_table$pct_missing_values > 90, "attributes"])
   df <- df[, !colnames(df) %in% attributter_som_fjernes]
   return(df)
 }
 
 
 trimmer_og_uniformiserer_data <- function(df){
+  
+  # df <- df[, !grepl("^NN", colnames(df))]
+  # df <- df[df$ejendomsgruppe %in% c("pcl_byzone", "pcl_landzone"),]
+  # df <- df[, !grepl("ejendomsgruppe", colnames(df))]
   df <- subset(df, enhed.antalvaerelser > 1 & enhed.antalvaerelser < 10)
   df <- subset(df, bolig_areal < 500 & bolig_areal > 50)
   df <- subset(df, bolig_alder > 0 & bolig_alder < 100)
@@ -229,6 +236,9 @@ trimmer_og_uniformiserer_data <- function(df){
   df <- subset(df, enhed.antalbadevaerelser > 0 & enhed.antalbadevaerelser < 4)
   df <- subset(df, enhed.antalvandskylledetoiletter > 0 & enhed.antalvandskylledetoiletter < 4)
   df <- subset(df, aux.vurbenyttelseskode == "01")
+  df <- subset(df, !is.na(df$fremskreven_pris_M2))
+  df <- subset(df, df$fremskreven_pris_M2 < 30000 & df$fremskreven_pris_M2 > 0)
+  df <- subset(df, !is.na(df$EV_NN_M2))
   df <- df[, c(#"aux.ice_info.adresse.afstand_hoejspaending_any",
                 # "aux.ice_info.adresse.afstand_vandloeb_any",
                 # "aux.ice_info.adresse.afstand_soe_any",
@@ -250,7 +260,8 @@ trimmer_og_uniformiserer_data <- function(df){
                 "aux.ice_info.adresse.afstand_motorvej_motortrafikvej",
                 #"aux.ice_info.adresse.afstand_trafikvej_gennemfart",
                 "aux.ice_info.adresse.afstand_kyst",
-                "EV_NN_M2"
+                names(df)[grepl("NN", names(df))],
+                "ejendomsgruppe"
                 # "aux.adresse.etrs89koordinatoest",
                 # "aux.adresse.etrs89koordinatnord"
                 )]
