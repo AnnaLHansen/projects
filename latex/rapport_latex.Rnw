@@ -226,4 +226,48 @@ Ridge regression - ridge regression er regressionsmetode som bruges for at undg�
 Et godt fit er kendetegnet ved et lav RSS, men også størrelsen på koeffiecienterne - disse to til sammen udgør den samlede 'cost'. I ridge regression bruges l2-normen som et mål for størrelsen på koefficienterne og målet med ridge regression er minimere den samlede 'cost'.
 Dette kan gøres ved at indføre en regulariseringsparameter (lambda), og den kan bruges til at styre kompleksisteten af sin model. 
 
+
+\section{Regression - part B}
+
+Kunstige neurale netværk (ANN) er en metode indenfor machine learning som er et sæt af algoritmer som er designet til at genkende mønstre. I dette tilfælde med ejendomspriser fodres machine learning algoritmen med en masse features som der ud fra et forretningsmæssigt synspunkt har betydning for priserne samt de tilhørende ejendomspriser. Machine learning algoritmen tager disse observationer som med sin læringsalogritme lærer at fordusige ejendomspriserne ud fra de features den bliver givet. 
+Den mest simple form for et kunstigt neuralt netværk er et 'feedforward' netværk. I ANNs betrages som lag af neuroner som videregiver information fra et lag til det næste. Det yderste lag i et ANN er inputlaget som er de features der bliver fodret ind i modellen. Ud fra et sæt af vægte bliver denne information givet videre til de næste underliggende lag ('forward pass'). De næste lag kan bestå af et eller flere skjulte lag og til sidst har man det yderste lag som er output laget. 
+Et neuralt netværk kan være fra inputlaget med input features reducere antallet af dimensioner til outputlaget, hvilket gør dem gode til at løse multidemensionelle regressions- og klassifikationsproblemer. 
+I det/de skjulte lag bliver hver at skjulte enheder transformeret med en ikke lineær aktiveringsfunktion. Til træning af dette neurale netværk er det aktiveringsfunktionen "tahn" der er blevet anvendt. 
+
+<<echo=FALSE, eval=FALSE, fig=TRUE>>=
+bestnet <- readRDS("ANN/bestnet.rds")
+# Display the trained network (given for last cross-validation fold)
+plot(bestnet);
+
+@
+
+\section{Classification}
+
+\chapter{Part III - Unsupervised learning}
+I denne del af opgaven bliver der lavet en clusteranalyse, der er bliver foretaget en outlier-detektion og lavet 'association mining'. 
+
+\section{Clustering}
+
+Inden regressionsanalysen blev foretaget blev der lavet en grov sortering af ejendomssalg, således at det udelukkende var rene parcelhussalg som modellen blev trænet på. 
+Alle ejendomme i Danmark bliver registreret i BBR med en enhedsanvendelse. Enhedsanvendelse 120 dækker for eksempel over helt almindelige parcelhuse. 130 dækker over rækkehuse og 510 dækker over sommerhuse. Erhvervsbygninger og ejerlejligheder mm bliver registreret med andre koder. 
+Med en hierakisk clusteranalyse vil jeg forsøge at gruppere disse ejendomme til mindre grupper. Formålet med at gøre dette vil være dels være at undersøge hvor ens ejendommene er på trods af deres forskellige BBR koder. Der er godt og vel 100 forskellige BBR koder som bliver givet. For nogle af disse koder vil der ikke være særlig mange ejendomme i, og det kunne derfor være interessant at se om man vil kunne slå nogle af disse grupper sammen når man træner sin regressionsmodel.
+
+\section{Outlier detection / anomaly detection}
+
+\section{Association mining}
+
+\chapter{Bilag}
+
+<<echo=FALSE>>=
+attribut_oversigt <- readRDS("atrtribut.rds")
+attribut_oversigt <- attribut_oversigt[order(attribut_oversigt$pct_missing_values, decreasing = TRUE),]
+knitr::kable(attribut_oversigt)
+@
+
+<<echo=FALSE>>=
+train <- readRDS("train_behandlet.rds")
+attribut <- undersoeger_attributter(train)
+knitr::kable(attribut)
+@
+
 \end{document}
