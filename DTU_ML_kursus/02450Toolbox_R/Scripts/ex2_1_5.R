@@ -35,12 +35,8 @@ grid(lty='solid')
 print('PC2:')
 print(V[,1])
 
-# How does this translate to the actual data and its projections?
-# Looking at the data for water:
-
-# Projection of water class onto the 2nd principal component.
-water <- Y[y==4,]
-
+# Projektionen af vand-klassen ned på den 2 Principal component.
+water <- Y[y==4,] # attribut vaerdierne for vand observationerne
 print('First water observation')
 print(water[1,])
 

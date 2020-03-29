@@ -1,4 +1,4 @@
-## Excersise 1:
+## Excersise 1 - Datasets and datahandling
 library(mltools)
 library(data.table)
 library(magrittr)
@@ -68,7 +68,7 @@ X <- X %>%
 N = dim(X)[1]
 M = dim(X)[2]
 
-i = 4
+i = 1
 xi = X[,i]
 plot(xi, y[,1],
      main='Iris regression problem',
