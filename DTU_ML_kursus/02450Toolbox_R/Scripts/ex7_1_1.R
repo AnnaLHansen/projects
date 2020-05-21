@@ -1,12 +1,12 @@
 # exercise 7.1.1
 
 rm(list=ls())
-source('setup.R')
+source('DTU_ML_kursus/02450Toolbox_R/setup.R')
 library(FNN)
 library(cvTools)
 
 # Load data
-source("Scripts/ex4_2_1.R")
+source("DTU_ML_kursus/02450Toolbox_R/Scripts/ex4_2_1.R")
 
 # Leave-one-out crossvalidation
 CV <- cvFolds(N, K=N);

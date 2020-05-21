@@ -3,7 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[document]{ragged2e}
 \usepackage{graphicx}
-\graphicspath{ {C:/Users/alhan/projects/billeder/}}
+\graphicspath{ {~/Documents/projects/billeder/}}
 \begin{document}
 \SweaveOpts{concordance=TRUE}
 \begin{titlepage}
@@ -39,8 +39,8 @@ library(cvTools)
 library(ggfortify)
 library(glmnet)
 # setwd("C:/Users/alhan/projects/")
-source("C:/Users/alhan/projects/help_func_datainspec.R")
-source("C:/Users/alhan/projects/help_func_standardization.R")
+source("~/projects/help_func_datainspec.R")
+source("~/projects/help_func_standardization.R")
 @
 
 \section{Beskrivelse af data}
@@ -116,23 +116,19 @@ I 2 del er formålet at bruge det rensede data fra del 1 til at forudsige fremsk
 Håbet med denne regressionsanalyse er at man ud fra relativt få variable og en relativt simpel model vil kunne forudsige ejendomspriserne. 
 Forud for regressionsanalysen er data blevet tranformeret. For faktorvariablene tagtype og vægmateriale har jeg valgt at tranformere med en one-of-k transformering. Herefter er alle attributter blevet standardiseret, således at de har en gennemsnit på 0 og en standardafvigelse på 1. 
 
-Den lineære model som fittes er en multivariate lineær regressionsmodel. 
-Variablene som bliver brugt i modellen er områdepriser i form af naboernes kvadratmeterpriser. Det er boligens opførelsesalder og ombygningsår, og det er boligens og grundens areal. 
+\includegraphics[width=\textwidth]{linear_plot_1}
 
-\includegraphics[width=\textwidth]{lm_udencross}
+\includegraphics[width=\textwidth]{linear_plot_2}
 
 I en multivariate lineær regressionsmodel kan man ikke på samme måde plotte den fittede model på det todimensionelle plot. Her kan man i stedet estimerer hvor godt modellen fitter til data ved at minimere summen af de kvadrerede afvigelser (RSS). 
 Der findes flere forskellige typer af algoritmer hvis formål er at finde de parametre/vægte som laver det bedste fit til data ved at minimerer 'cost'. 
 
 Overfitting er når den trænede model er så god til at forudsige det data den er trænet på at den ikke kun fanger tendenserne i data men at den også fanger støj. For at undgå at den trænede model overfitter kan man bl.a. bruge metoden Krydsvalidering. Ved krydsvalidering opdeles data i to mindre datasæt. Et datasæt som der trænes på og et datasæt som modellen testes på. Selve opsplitningen i test og træingsdata kan gøres flere gange.
 
-\includegraphics[width=\textwidth]{lm_medcross}
-
 Når modellen er trænet kan man ud fra modellen koefficient estimater se hvor meget de enkelte parametre bidrager med hvis værdien for den pågældende parameter øges. 
 I tilfælde af at de uafhængige variable som indgår i modellen er korrelerede kan estimaterne være svære at forklare, fordi noget af effekten indirekte ligger i den korrelerede parameter. Dette påvirker dog ikke nødvendigvis selve prædiktionen. 
 
 I tilfælde at at ens variable ikke er er additive kan man med fordel kigge på interaktionerne mellem to variable. Dette er endnu en måde at få et bedre fit.
 
-\includegraphics[width=\textwidth]{ANN_plot1}
 
 \end{document}

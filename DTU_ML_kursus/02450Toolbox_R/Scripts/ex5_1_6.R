@@ -1,7 +1,7 @@
 #exercise 5.1.6
 
 # get data
-source(file.path("Scripts", "ex5_1_5.R"))
+source(file.path("~/projects/DTU_ML_kursus/02450Toolbox_R/Scripts", "ex5_1_5.R"))
 
 library(rpart)
 Xdatframe <- data.frame(X)
@@ -12,7 +12,11 @@ classassignments <- classNames[y+1]
 (fmla <- as.formula(paste("classassignments ~ ", paste(attributeNames, collapse= "+"))))
 
 # fit classification tree
-mytree <- rpart(fmla, data=Xdatframe,control=rpart.control(minsplit=100, minbucket=1, cp=0), parms=list(split='gini'), method="class")
+mytree <- rpart(fmla,
+                data=Xdatframe,
+                control=rpart.control(minsplit=100, minbucket=1, cp=0),
+                parms=list(split='gini'),
+                method="class")
 
 par(xpd=NA)
 plot(mytree)

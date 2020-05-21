@@ -39,6 +39,7 @@ train <- binarisere_afstande(train)
 # også være rigtig godt hvis man ud fra sin forretningsviden kan reducere
 # antallet af attributter. 
 train <- readRDS("train.rds")
+train <- train %>% dplyr::select(-fremskreven_pris_M2)
 # Standardization: rescales your data to have a mean of 0 and a standard deviation of 1
 # Standardiseringen bliver lavet inden 
  # Bruger deres funktion til at standardisere
@@ -52,25 +53,39 @@ train <- train[train$ejendomsgruppe %in% c("pcl_byzone",
                                              "rkh_landzone"),]
 train <- standardize(train)
 
-
+# Principal component analysen skal foretages uden variablen 
+# med den fremskrevne handelspris. 
 train_pca <- prcomp(train)
-summary(train_pca)
-str(train_pca)
+# Plotter den første og den anden principal component mod hinanden.
+# PC1 på x aksen da det er den principal component som forklarer mest af
+# variationen i data. 
+plot(train_pca$x[,1], train_pca$x[,2])
 
-library(ggfortify)
-autoplot(train_pca, loadings = TRUE)
+pca_data <- data.frame(Sample = rownames(train_pca$x),
+                       X= train_pca$x[, 1],
+                       Y = train_pca$x[, 2])
 
-s <- svd(train)
-rho <- ((s$d)^2)/(sum((s$d)^2))
-par(mar = c(5, 4, 4, 4) + 0.3)
-plot(rho,
+pca_var <- train_pca$sdev^2
+pca_var_round <- round(pca_var/sum(pca_var)*100, 1)
+
+library(ggplot2)
+ggplot(data = pca_data,
+       aes(x=X, y = Y)) +
+  geom_point() +
+  xlab(paste("PC1 - ", pca_var_round[[1]], "%", sep ="")) +
+  ylab(paste("PC2 - ", pca_var_round[[2]], "%", sep ="")) +
+  theme_bw() +
+  ggtitle("Principal Component Analysis")
+
+# Scree plot? 
+plot(pca_var_round,
      type='o',
      main="Varians forklaret med principal components",
      xlab="Principal components", 
      ylab="Forklaret varians",
      col='deepskyblue')
 par(new = TRUE)
-plot(cumsum(rho),
+plot(cumsum(pca_var_round),
      type='o',
      col='darkorchid',
      axes = FALSE, 
@@ -84,6 +99,45 @@ legend("topleft",
 )
 axis(side=4)
 mtext("Kummulativ varians", side=4, line=3)
+
+# 
+# barplot(pca_var_round,
+#         main = "Varians blandt Principal Components",
+#         xlab = "Principal Components",
+#         ylab = "Procent variation")
+
+loading_scores <- train_pca$rotation[, 1]
+loading_scores_abs <- abs(loading_scores)
+loading_scores_abs <- sort(loading_scores_abs, decreasing = TRUE)
+# Top 10 som har en inflydelse på variationen 
+# i den første princip component
+loading_scores_abs[1:10]
+names(loading_scores_abs[1:10])
+
+summary(train_pca)
+str(train_pca)
+
+par(mar = c(5, 4, 4, 4) + 0.3)
+barplot(cumsum(pca_var_round),
+        col = 'darkorchid',
+        axes = FALSE, 
+        ylab = "", 
+        xlab = "")
+axis(side=4)
+mtext("Kummulativ varians", side=4, line=3)
+par(new = TRUE)
+barplot(pca_var_round,
+        main = "Varians blandt Principal Components",
+        xlab = "Principal Components",
+        ylab = "Procent variation",
+        col='deepskyblue')
+
+legend("topleft",
+       c("varians","kommulativ varians"),
+       cex=.8,
+       bty = 'n',
+       fill=c("deepskyblue","darkorchid")
+)
 # De foeste tre principal components kan man forklare 90% af variationen i data.
 # For at kommme over 95% skal man have de 18 foerste komponenter. 
 # Der er i alt 23 mulige komponenter.
@@ -95,31 +149,9 @@ mtext("Kummulativ varians", side=4, line=3)
 # finde ud af hvor meget af variationen i data der kan forklares ud fra hver enkelt PCA komponent. 
 # Prøv at se om det er muligt at lave en enkelt variabel ud fra de to koordinater - Eller - kan de indgå 
 # som to selvstændige variable?
-Z <- s$u%*%diag(s$d)
-i <- 1
-j <- 2
-plot(Z[, i ], Z[, j])
 
-# Laver endnu et plot af PCA analysen:
-# Udtraekker v fra scd resultatet.
-V <- s$v
-library(ggplot2)
-# We saw in 2.1.3 that the first 3 components explaiend more than 90
-# percent of the variance. Let's look at their coefficients:
-pcs <- 1:16
-# Make some legend strings:
-legendStrings = c()
-for (pc in pcs) { legendStrings = c(legendStrings, paste('PC',toString(pc))) }
-
-# Make a bar plot for coefficients:
-mids <- barplot(t(V[, pcs]), beside=T,
-                col=c('blue','orange','green'),
-                legend=legendStrings,
-                xlab='Attributes',
-                ylab='Component coefficients',
-                border="white")
-axis(1, at=mids[2,], labels=attributeNames)
-grid(lty='solid')
+library(ggfortify)
+autoplot(train_pca, loadings = TRUE)
 
 ####################
 # exercise 3
@@ -149,8 +181,9 @@ range_values <- sapply(colnames(train), function(x){
 
 library(corrplot)
 correlation <- cor(train)
-corrplot(correlation) # Der er et eller andet galt med dimentionerne
-# når den plotter. 
-
+print(colnames(correlation))
+rownames(correlation) <- 1:nrow(correlation)
+colnames(correlation) <- 1:nrow(correlation)
+corrplot(correlation)
 ## Similarity measures mangler: og Et ordenligt correlation plot mangler
 # også !

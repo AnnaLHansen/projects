@@ -1,7 +1,7 @@
 # exercise 5.2.6
 
 # Load wine data 
-source(file.path("Scripts", "ex5_1_5.R"))
+source(file.path("~/projects/DTU_ML_kursus/02450Toolbox_R/Scripts", "ex5_1_5.R"))
 X = data.frame(X)
 xnam <- paste("X", 1:dim(X)[2], sep="")
 (fmla <- as.formula(paste("y ~ ", paste(xnam, collapse= "+"))))

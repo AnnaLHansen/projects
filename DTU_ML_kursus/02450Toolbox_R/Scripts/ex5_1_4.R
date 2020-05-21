@@ -1,5 +1,5 @@
 # exercise 5.1.4
-source(file.path("Scripts", "ex5_1_1.R")) # get data
+source(file.path("~/projects/DTU_ML_kursus/02450Toolbox_R/Scripts", "ex5_1_1.R")) # get data
 library(rpart)
 Xdatframe <- data.frame(X)
 colnames(Xdatframe) <- attributeNames

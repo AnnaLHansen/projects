@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7250 64-bit) (preloaded format=pdflatex 2019.11.29)  22 DEC 2019 15:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7250 64-bit) (preloaded format=pdflatex 2019.11.29)  7 APR 2020 11:00
 entering extended mode
 **./test.tex
 (test.tex
@@ -442,22 +442,48 @@ ut reskaleres således
  []
 
 [3]
-<C:/Users/alhan/projects/billeder/pca_plot1.png, id=21, 414.04688pt x 310.91156
-pt>
-File: C:/Users/alhan/projects/billeder/pca_plot1.png Graphic file (type png)
-<use C:/Users/alhan/projects/billeder/pca_plot1.png>
-Package pdftex.def Info: C:/Users/alhan/projects/billeder/pca_plot1.png  used o
-n input line 93.
-(pdftex.def)             Requested size: 345.0pt x 259.07175pt.
-<C:/Users/alhan/projects/billeder/pca_plot2.png, id=22, 414.04688pt x 310.91156
-pt>
-File: C:/Users/alhan/projects/billeder/pca_plot2.png Graphic file (type png)
-<use C:/Users/alhan/projects/billeder/pca_plot2.png>
-Package pdftex.def Info: C:/Users/alhan/projects/billeder/pca_plot2.png  used o
-n input line 95.
-(pdftex.def)             Requested size: 345.0pt x 259.07175pt.
- [4 <C:/Users/alhan/projects/billeder/pca_plot1.png>] [5 <C:/Users/alhan/projec
-ts/billeder/pca_plot2.png>]
+
+! Package pdftex.def Error: File `\unhbox\voidb@x \penalty\@M \ {}/Documents/pr
+ojects/billeder/pca_plot1.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.93 \includegraphics[width=\textwidth]{pca_plot1}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX Font Info:    Trying to load font information for T1+aett on input line 9
+3.
+("C:\Users\alhan\AppData\Local\Programs\MiKTeX 2.9\tex/latex/ae\t1aett.fd"
+File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
+)
+Overfull \hbox (204.77701pt too wide) in paragraph at lines 93--94
+[] \T1/aer/m/n/10 /Doc-u-ments/projects/billeder/pca_plot1.pdf" []  
+ []
+
+[4]
+
+! Package pdftex.def Error: File `\unhbox\voidb@x \penalty\@M \ {}/Documents/pr
+ojects/billeder/pca_plot2.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.95 \includegraphics[width=\textwidth]{pca_plot2}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Overfull \hbox (204.77701pt too wide) in paragraph at lines 95--96
+[] \T1/aer/m/n/10 /Doc-u-ments/projects/billeder/pca_plot2.pdf" []  
+ []
+
+[5] [6]
 Chapter 2.
 
 Overfull \hbox (0.33482pt too wide) in paragraph at lines 105--108
@@ -466,63 +492,71 @@ f at det havde været
  []
 
 
-Overfull \hbox (6.98506pt too wide) in paragraph at lines 109--111
-\T1/aer/m/n/10 ab-lene som bliver brugt i mod-ellen er om-råde-priser i form af
- naboernes kvadrat- 
+! Package pdftex.def Error: File `\unhbox\voidb@x \penalty\@M \ {}/Documents/pr
+ojects/billeder/linear_plot_1.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.109 ...graphics[width=\textwidth]{linear_plot_1}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Overfull \hbox (217.9568pt too wide) in paragraph at lines 109--110
+[] \T1/aer/m/n/10 /Doc-u-ments/projects/billeder/linear_plot_1.pdf" []  
  []
 
-<C:/Users/alhan/projects/billeder/lm_udencross.png, id=31, 414.04688pt x 310.91
-156pt>
-File: C:/Users/alhan/projects/billeder/lm_udencross.png Graphic file (type png)
-
-<use C:/Users/alhan/projects/billeder/lm_udencross.png>
-Package pdftex.def Info: C:/Users/alhan/projects/billeder/lm_udencross.png  use
-d on input line 112.
-(pdftex.def)             Requested size: 345.0pt x 259.07175pt.
-[6
+[7
 
 ]
-Overfull \hbox (0.46547pt too wide) in paragraph at lines 117--118
+
+! Package pdftex.def Error: File `\unhbox\voidb@x \penalty\@M \ {}/Documents/pr
+ojects/billeder/linear_plot_2.pdf' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.111 ...graphics[width=\textwidth]{linear_plot_2}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Overfull \hbox (217.9568pt too wide) in paragraph at lines 111--112
+[] \T1/aer/m/n/10 /Doc-u-ments/projects/billeder/linear_plot_2.pdf" []  
+ []
+
+[8]
+Overfull \hbox (0.46547pt too wide) in paragraph at lines 116--117
 \T1/aer/m/n/10 er trænet på at den ikke kun fanger ten-denserne i data men at d
 en også fanger 
  []
 
-<C:/Users/alhan/projects/billeder/lm_medcross.png, id=36, 414.04688pt x 310.911
-56pt>
-File: C:/Users/alhan/projects/billeder/lm_medcross.png Graphic file (type png)
-<use C:/Users/alhan/projects/billeder/lm_medcross.png>
-Package pdftex.def Info: C:/Users/alhan/projects/billeder/lm_medcross.png  used
- on input line 119.
-(pdftex.def)             Requested size: 345.0pt x 259.07175pt.
-[7 <C:/Users/alhan/projects/billeder/lm_udencross.png>]
-<C:/Users/alhan/projects/billeder/ANN_plot1.png, id=41, 387.69844pt x 243.15843
-pt>
-File: C:/Users/alhan/projects/billeder/ANN_plot1.png Graphic file (type png)
-<use C:/Users/alhan/projects/billeder/ANN_plot1.png>
-Package pdftex.def Info: C:/Users/alhan/projects/billeder/ANN_plot1.png  used o
-n input line 126.
-(pdftex.def)             Requested size: 345.0pt x 216.38063pt.
- [8 <C:/Users/alhan/projects/billeder/lm_medcross.png>] [9 <C:/Users/alhan/proj
-ects/billeder/ANN_plot1.png (PNG copy)>] (test.aux) ) 
+[9] [10] (test.aux) ) 
 Here is how much of TeX's memory you used:
- 3051 strings out of 492450
- 45889 string characters out of 3120004
- 102889 words of memory out of 3000000
- 7338 multiletter control sequences out of 15000+200000
- 27340 words of font info for 53 fonts, out of 3000000 for 9000
+ 3048 strings out of 492450
+ 45208 string characters out of 3120004
+ 102886 words of memory out of 3000000
+ 7331 multiletter control sequences out of 15000+200000
+ 28187 words of font info for 56 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  55i,5n,32p,961b,167s stack positions out of 5000i,500n,10000p,200000b,50000s
- <C:\Users\alhan\AppData\L
-ocal\MiKTeX\2.9\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1000.pk><C:/Users/alhan/
-AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:
-/Users/alhan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
-mmi10.pfb><C:/Users/alhan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/
-amsfonts/cm/cmr10.pfb><C:/Users/alhan/AppData/Local/Programs/MiKTeX 2.9/fonts/t
-ype1/public/amsfonts/cm/cmr17.pfb><C:/Users/alhan/AppData/Local/Programs/MiKTeX
- 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on test.pdf (10 pages, 147100 bytes).
+ <C:\Users\alhan\AppData\Local\MiKTeX\2.9\fonts/pk/ljfour/
+jknappen/ec/dpi600\tcrm1000.pk><C:/Users/alhan/AppData/Local/Programs/MiKTeX 2.
+9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/alhan/AppData/Local/Progr
+ams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/alhan/AppDat
+a/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/
+alhan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pf
+b><C:/Users/alhan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
+/cm/cmsy10.pfb><C:/Users/alhan/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
+blic/amsfonts/cm/cmtt10.pfb>
+Output written on test.pdf (11 pages, 99186 bytes).
 PDF statistics:
- 70 PDF objects out of 1000 (max. 8388607)
+ 68 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 30 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 5 words of extra memory for PDF output out of 10000 (max. 10000000)
 

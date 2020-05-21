@@ -1,7 +1,7 @@
 # exercise 4.2.1
 
 # read data into R
-dat <- read.csv("./Data/iris.csv", sep=",", check.names=FALSE)
+dat <- read.csv("DTU_ML_kursus/02450Toolbox_R/Data/iris.csv", sep=",", check.names=FALSE)
 
 # inspect the contents of the variable "dat"
 names(dat)

@@ -1,6 +1,6 @@
 # exercise 8.1.2
 rm(list=ls())
-source("DTU_ML_kursus/02450Toolbox_R/setup.R")
+source("~/projects/DTU_ML_kursus/02450Toolbox_R/setup.R")
 library(cvTools)
 
 # Load data

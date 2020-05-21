@@ -2,7 +2,7 @@
 
 # Load the data
 library(R.matlab)
-dat <- readMat("DTU_ML_kursus/02450Toolbox_R/Data/wine.mat")
+dat <- readMat("~/projects/DTU_ML_kursus/02450Toolbox_R/Data/wine.mat")
 X <- dat$X
 N <- dat$N
 attributeNames <- as.vector(unlist(dat$attributeNames))

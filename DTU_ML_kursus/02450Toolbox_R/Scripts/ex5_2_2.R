@@ -1,7 +1,7 @@
 # exercise 5.2.2
 
 # get regression data generated in exercise 5.2.1
-source(file.path("Scripts", "ex5_2_1.R"))
+source(file.path("~/projects/DTU_ML_kursus/02450Toolbox_R/Scripts", "ex5_2_1.R"))
 dev.off() # close the figure from exercise 5.2.1
 
 # Estimate model parameters
